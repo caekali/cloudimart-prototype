@@ -22,8 +22,10 @@ class ProductController extends BaseController
     )]
     public function index(Request $request)
     {
-        $products = Product::all();
-        return $this->successResponse(ProductResource::collection($products), 'Products retrieved.');
+        $products = Product::orderBy('id', 'desc')->cursorPaginate(15);
+        $resource = ProductResource::collection($products);
+        $response = $resource->response()->getData(true);
+        return $this->successResponse(data: $response['data'], message: 'Products retrieved.', meta: $response['meta']);
     }
 
     #[OA\Get(
@@ -48,8 +50,10 @@ class ProductController extends BaseController
             Category::findOrFail($categoryId);
         }
 
-        $products = Product::where('category_id', $categoryId)->get();
-        return $this->successResponse(ProductResource::collection($products), 'Products retrieved.');
+        $products = Product::where('category_id', $categoryId)->cursorPaginate(15);
+        $resource = ProductResource::collection($products);
+        $response = $resource->response()->getData(true);
+        return $this->successResponse(data: $response['data'], message: 'Products retrieved.', meta: $response['meta']);
     }
 
     #[OA\Post(
