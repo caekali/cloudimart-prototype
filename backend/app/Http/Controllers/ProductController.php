@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProductController extends BaseController
 {
@@ -21,7 +23,7 @@ class ProductController extends BaseController
     public function index(Request $request)
     {
         $products = Product::all();
-        return $this->successResponse(ProductResource::collection($products), 'Products retrieved successfully.');
+        return $this->successResponse(ProductResource::collection($products), 'Products retrieved.');
     }
 
     #[OA\Get(
@@ -37,7 +39,7 @@ class ProductController extends BaseController
                 schema: new OA\Schema(type: "integer")),
         ],
         responses: [
-            new OA\Response(response: 200, description: "Products retrieved successfully.")
+            new OA\Response(response: 200, description: "Products retrieved.")
         ]
     )]
     public function getProductsByCategory(Request $request, $categoryId)
@@ -47,6 +49,42 @@ class ProductController extends BaseController
         }
 
         $products = Product::where('category_id', $categoryId)->get();
-        return $this->successResponse(ProductResource::collection($products), 'Products retrieved successfully.');
+        return $this->successResponse(ProductResource::collection($products), 'Products retrieved.');
+    }
+
+    #[OA\Post(
+        path: "/products",
+        summary: "Add a product",
+        requestBody: new OA\RequestBody(required: true,
+            content: new OA\MediaType(mediaType: "multipart/form-data",
+                schema: new OA\Schema(required: ["name", "description", "price", "category_id"],
+                    properties: [
+                        new OA\Property(property: 'name', description: "Product name", type: "string"),
+                        new OA\Property(property: 'description', description: "Product description", type: "string"),
+                        new OA\Property(property: 'price', description: "Product price", type: "float"),
+                        new OA\Property(property: 'image', description: "Product image",type: "string",format: "binary"),
+                        new OA\Property(property: 'category_id', description: "Product category", type: "integer")
+                        ]
+                ))),
+        tags: ["Products"],
+        responses: [
+            new OA\Response(response: Response::HTTP_CREATED, description: "Product Added"),
+            new OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: "Unprocessable entity"),
+            new OA\Response(response: Response::HTTP_BAD_REQUEST, description: "Bad Request"),
+            new OA\Response(response: Response::HTTP_INTERNAL_SERVER_ERROR, description: "Internal Server Error")
+        ]
+    )]
+    public function store(StoreProductRequest $request)
+    {
+       $data = $request->validated();
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('products', 'public');
+            $data['image_url'] = $path;
+        }
+
+        Product::create($data);
+
+        return $this->successResponse(message: 'Product added');
     }
 }
