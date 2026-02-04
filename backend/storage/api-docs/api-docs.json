@@ -39,6 +39,31 @@
                     }
                 }
             }
+        },
+        "/categories/{categoryId}/products": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get products by category",
+                "operationId": "4b267b0def568f354a189242b9a19b0a",
+                "parameters": [
+                    {
+                        "name": "categoryId",
+                        "in": "path",
+                        "description": "Id of the category",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Products retrieved successfully."
+                    }
+                }
+            }
         }
     },
     "components": {
