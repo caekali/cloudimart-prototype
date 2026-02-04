@@ -25,6 +25,20 @@
                     }
                 }
             }
+        },
+        "/products": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get products",
+                "operationId": "c1ff6f862214e1896c59cfe0491ce0e8",
+                "responses": {
+                    "200": {
+                        "description": "Products retrieved successfully."
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -41,6 +55,10 @@
         {
             "name": "Categories",
             "description": "Categories"
+        },
+        {
+            "name": "Products",
+            "description": "Products"
         }
     ]
 }
