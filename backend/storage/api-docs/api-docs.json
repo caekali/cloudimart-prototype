@@ -1,51 +1,29 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "Petshop-api Documentation",
-        "description": "petshop api",
+        "title": "Cloudimart api Documentation",
+        "description": "Cloudimart api",
         "version": "1.0.0"
     },
     "servers": [
         {
-            "url": "http://localhost:8088",
+            "url": "http://localhost:8000/api",
             "description": "local server"
-        },
-        {
-            "url": "http://staging.example.com",
-            "description": "staging server"
-        },
-        {
-            "url": "http://example.com",
-            "description": "production server"
         }
     ],
     "paths": {
-        "/api/v1/admin/user-listing": {
+        "/categories": {
             "get": {
                 "tags": [
-                    "Admin"
+                    "Categories"
                 ],
-                "summary": "List all non-admin users",
-                "operationId": "38d67933ba8e640c97df3a0dbd50df6f",
+                "summary": "Get categories",
+                "operationId": "ead5fb1cf2a7453acb2e37928a1b1eaf",
                 "responses": {
                     "200": {
-                        "description": "users retrieved success"
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "404": {
-                        "description": "not found"
-                    },
-                    "500": {
-                        "description": "Server Error"
+                        "description": "Success"
                     }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
+                }
             }
         }
     },
@@ -61,8 +39,8 @@
     },
     "tags": [
         {
-            "name": "Admin",
-            "description": "Admin"
+            "name": "Categories",
+            "description": "Categories"
         }
     ]
 }
