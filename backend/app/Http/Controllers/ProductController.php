@@ -56,6 +56,21 @@ class ProductController extends BaseController
         return $this->successResponse(data: $response['data'], message: 'Products retrieved.', meta: $response['meta']);
     }
 
+
+    public function search(Request $request)
+    {
+        $query = $request->query('q');
+// $products = Product::search($query)
+//     ->query(function ($builder) use ($request) {
+//         $builder->where('category_id', $request->category_id ?? 0);
+//     })
+//     ->paginate(20);
+        // Simple search
+        $products = Product::search($query)->get();
+
+        return response()->json($products);
+    }
+
     #[OA\Post(
         path: "/products",
         summary: "Add a product",

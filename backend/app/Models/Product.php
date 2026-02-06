@@ -5,9 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
+use Laravel\Scout\Searchable;
 
 class Product extends Model
 {
+
+     use Searchable;
+
     protected $fillable = [
         'name',
         'description',
@@ -15,6 +19,16 @@ class Product extends Model
         'image_url',
         'category_id',
     ];
+
+
+    public function toSearchableArray()
+    {
+        return [
+            'id' => $this->id,    
+            'name' => $this->name,
+            'description' => $this->description,
+        ];
+    }
 
     public function getImageUrlAttribute($value): ?string
     {
