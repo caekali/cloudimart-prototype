@@ -10,4 +10,18 @@ export async function getProducts(): Promise<Product[]> {
   return PRODUCTS
 }
 
+export async function getProductBySlug(slug: string): Promise<Product | undefined> {
+  // const res = await fetch(`/api/products/${id}`);
+  // if (!res.ok) throw new Error(`Failed to fetch product ${id}`);
+  // return res.json();
+  // const product = PRODUCTS.find((p) => p.slug === slug)
+  // if(!product) throw new Error('Product not found');
+
+  return new Promise((resolve) => {
+    const product = PRODUCTS.find((p) => p.slug === slug);
+    setTimeout(() => resolve(product), 2000);
+  });
+  return PRODUCTS.find((p) => p.slug === slug)
+
+}
 
