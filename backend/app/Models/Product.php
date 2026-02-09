@@ -15,6 +15,7 @@ class Product extends Model
     protected $fillable = [
         'name',
         'description',
+        'slug',
         'price',
         'image_url',
         'category_id',
@@ -26,6 +27,7 @@ class Product extends Model
         return [
             'id' => $this->id,    
             'name' => $this->name,
+            'slug' => $this->slug,
             'description' => $this->description,
         ];
     }

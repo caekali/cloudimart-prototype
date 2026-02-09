@@ -7,6 +7,7 @@ use App\Http\Resources\ProductResource;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -22,7 +23,7 @@ class ProductController extends BaseController
     )]
     public function index(Request $request)
     {
-        $products = Product::orderBy('id', 'desc')->cursorPaginate(15);
+        $products = Product::orderBy('id', 'desc')->cursorPaginate(5);
         $resource = ProductResource::collection($products);
         $response = $resource->response()->getData(true);
         return $this->successResponse(data: $response['data'], message: 'Products retrieved.', meta: $response['meta']);
@@ -71,6 +72,53 @@ class ProductController extends BaseController
         return response()->json($products);
     }
 
+
+    #[OA\Get(
+        path: "/products/{productId}",
+        summary: "Get products by productId",
+        tags: ["Products"],
+        parameters: [
+            new OA\Parameter(
+                name: "productId",
+                description: "Id of the product",
+                in: "path",
+                required: true,
+                schema: new OA\Schema(type: "integer")),
+        ],
+        responses: [
+            new OA\Response(response: 200, description: "Products retrieved.")
+        ]
+    )]
+     public function show($id)
+    {
+        $product = Product::findOrfail($id);
+
+        return $this->successResponse(new ProductResource($product));
+    }
+
+     #[OA\Get(
+        path: "/products/{slug}",
+        summary: "Get products by slug",
+        tags: ["Products"],
+        parameters: [
+            new OA\Parameter(
+                name: "slug",
+                description: "slug of the product",
+                in: "path",
+                required: true,
+                schema: new OA\Schema(type: "string")),
+        ],
+        responses: [
+            new OA\Response(response: 200, description: "Product retrieved.")
+        ]
+    )]
+     public function showBySlug($slug)
+    {
+        $product = Product::findOrfail(['slug' => $slug]);
+
+        return $this->successResponse(new ProductResource($product));
+    }
+
     #[OA\Post(
         path: "/products",
         summary: "Add a product",
@@ -93,17 +141,34 @@ class ProductController extends BaseController
             new OA\Response(response: Response::HTTP_INTERNAL_SERVER_ERROR, description: "Internal Server Error")
         ]
     )]
-    public function store(StoreProductRequest $request)
-    {
-       $data = $request->validated();
+   public function store(StoreProductRequest $request)
+{
+    $data = $request->validated();
 
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('products', 'public');
-            $data['image_url'] = $path;
-        }
+    // Generate unique slug from product name
+    $data['slug'] = $this->generateUniqueSlug($data['name']);
 
-        Product::create($data);
-
-        return $this->successResponse(message: 'Product added');
+    if ($request->hasFile('image')) {
+        $path = $request->file('image')->store('products', 'public');
+        $data['image_url'] = $path;
     }
+
+    Product::create($data);
+
+    return $this->successResponse(message: 'Product added');
+}
+
+private function generateUniqueSlug(string $name): string
+{
+    $slug = Str::slug($name);
+    $originalSlug = $slug;
+    $count = 1;
+
+    while (Product::where('slug', $slug)->exists()) {
+        $slug = "{$originalSlug}-{$count}";
+        $count++;
+    }
+
+    return $slug;
+}
 }
