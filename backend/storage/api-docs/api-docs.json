@@ -96,7 +96,7 @@
                         "description": "Bad Request"
                     },
                     "500": {
-                        "description": "Server Error"
+                        "description": "Internal Server Error"
                     }
                 }
             }
@@ -122,6 +122,56 @@
                 "responses": {
                     "200": {
                         "description": "Products retrieved."
+                    }
+                }
+            }
+        },
+        "/products/{productId}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get products by productId",
+                "operationId": "59868682c75d47fe2401d30a6e9d88e8",
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "description": "Id of the product",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Products retrieved."
+                    }
+                }
+            }
+        },
+        "/products/{slug}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get products by slug",
+                "operationId": "457cfdc6fe4427d556c84c0031b7d365",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug of the product",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product retrieved."
                     }
                 }
             }
