@@ -6,6 +6,7 @@ use App\Http\Requests\StoreProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
@@ -97,8 +98,8 @@ class ProductController extends BaseController
     }
 
      #[OA\Get(
-        path: "/products/{slug}",
-        summary: "Get products by slug",
+        path: "/products/slug/{slug}",
+        summary: "Get product by slug",
         tags: ["Products"],
         parameters: [
             new OA\Parameter(
@@ -112,12 +113,12 @@ class ProductController extends BaseController
             new OA\Response(response: 200, description: "Product retrieved.")
         ]
     )]
-     public function showBySlug($slug)
-    {
-        $product = Product::findOrfail(['slug' => $slug]);
+    public function showBySlug(string $slug)
+{
+    $product = Product::where('slug', $slug)->firstOrFail();
 
-        return $this->successResponse(new ProductResource($product));
-    }
+    return $this->successResponse(new ProductResource($product));
+}
 
     #[OA\Post(
         path: "/products",

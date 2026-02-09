@@ -11,7 +11,7 @@ Route::get('/categories', [CategoryController::class,'index']);
 Route::get('/categories/{categoryId}/products', [ProductController::class, 'getProductsByCategory']);
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{productId}', [ProductController::class, 'show']);
-Route::get('/products/{slug}', [ProductController::class, 'showBySlug']);
+Route::get('/products/slug/{slug}', [ProductController::class, 'showBySlug']);
 Route::post('/products', [ProductController::class, 'store']);
 Route::post('/products/search', [ProductController::class, 'search']);
 
