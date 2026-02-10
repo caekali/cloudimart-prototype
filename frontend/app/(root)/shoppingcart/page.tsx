@@ -27,7 +27,7 @@ export default function CartPage() {
         </p>
         <Link
           href="/"
-          className="bg-primary text-primary-foreground px-8 py-3 rounded-full hover:bg-primary/90 transition-colors inline-flex items-center gap-2"
+          className="bg-primary text-primary-foreground px-8 py-3 rounded-md hover:bg-primary/90 transition-colors inline-flex items-center gap-2"
         >
           Start Shopping <ArrowRight size={20} />
         </Link>
