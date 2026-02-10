@@ -1,8 +1,10 @@
+'use client'
+
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
-import { getCategories } from "@/api/categories";
+import { getCategories, getCategoriess } from "@/api/categories";
 import { Category } from "@/types/category";
 
 export function HomeHeader() {
@@ -15,8 +17,8 @@ export function HomeHeader() {
     const fetchCategories = async () => {
       setError(null);
       try {
-        const fetchedCategories = await getCategories();
-        setCategories(fetchedCategories);
+        const fetchedCategories = await getCategoriess();
+        setCategories(fetchedCategories.data!!);
       } catch (err) {
         console.error("Failed to fetch categories:", err);
         setError("Failed to load categories. Please try again later.");
