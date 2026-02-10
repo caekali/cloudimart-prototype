@@ -8,7 +8,6 @@ import { useRef, useState } from "react";
 import { useCart } from "@/context/cart-context";
 import { signOut } from "next-auth/react";
 import { useClickOutside } from "@/hooks/use-click-outside";
-import SignoutForm from "@/app/SignoutForm";
 
 export function NavBar({ session }: { session: any }) {
   const { cart } = useCart();
