@@ -1,27 +1,65 @@
+import { auth } from "@/auth";
 import { BASE_URL } from "@/constants/base_url";
-import { PRODUCTS } from "@/data/products";
+import { ApiResponse } from "@/types/api_response";
 import { Product } from "@/types/product";
+import { notFound } from "next/navigation";
 
 
-export async function getProducts(): Promise<Product[]> {
-  // const res = await fetch(`${BASE_URL}/products'`);
-  // if (!res.ok) throw new Error('Failed to fetch products');
-  // return res.json();
-  return PRODUCTS
+export async function getProducts(
+  cursor?: string
+): Promise<{ products: Product[]; nextCursor: string | null }> {
+  const session = await auth();
+  const apiToken = session?.token;
+
+  const url = new URL(`${BASE_URL}/products`)
+
+  if (cursor) {
+    url.searchParams.set("cursor", cursor)
+  }
+
+  const res = await fetch(url.toString(), {
+    cache: "no-store",
+    headers: { Authorization: `Bearer ${apiToken}` }
+  })
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch products")
+  }
+
+  const json = (await res.json()) as ApiResponse<Product[]>
+
+  if (!json.success || !json.data) {
+    throw new Error(json.message || "Invalid API response")
+  }
+
+  return {
+    products: json.data,
+    nextCursor: json.meta?.next_cursor ?? null,
+  }
 }
 
-export async function getProductBySlug(slug: string): Promise<Product | undefined> {
-  // const res = await fetch(`/api/products/${id}`);
-  // if (!res.ok) throw new Error(`Failed to fetch product ${id}`);
-  // return res.json();
-  // const product = PRODUCTS.find((p) => p.slug === slug)
-  // if(!product) throw new Error('Product not found');
 
-  return new Promise((resolve) => {
-    const product = PRODUCTS.find((p) => p.slug === slug);
-    setTimeout(() => resolve(product), 2000);
+export async function getProductBySlug(slug: string): Promise<Product> {
+  const res = await fetch(`${BASE_URL}/products/slug/${slug}`, {
+    cache: "no-store"
   });
-  return PRODUCTS.find((p) => p.slug === slug)
 
+  if (res.status === 404) {
+    notFound();
+  }
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch product: ${res.status}`);
+  }
+
+  const json = (await res.json()) as ApiResponse<Product>;
+
+  if (!json.success || !json.data) {
+    throw new Error(json.message || "Invalid response");
+  }
+
+  return json.data;
 }
+
+
 
