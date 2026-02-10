@@ -8,8 +8,8 @@ import { notFound } from "next/navigation";
 export async function getProducts(
   cursor?: string
 ): Promise<{ products: Product[]; nextCursor: string | null }> {
-  const session = await auth();
-  const apiToken = session?.token;
+  // const session = await auth();
+  // const apiToken = session?.token;
 
   const url = new URL(`${BASE_URL}/products`)
 
@@ -19,7 +19,6 @@ export async function getProducts(
 
   const res = await fetch(url.toString(), {
     cache: "no-store",
-    headers: { Authorization: `Bearer ${apiToken}` }
   })
 
   if (!res.ok) {

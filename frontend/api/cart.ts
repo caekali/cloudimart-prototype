@@ -12,11 +12,3 @@ export function removeFromCart(itemId: string) {
 export function updateCartQuantity(itemId: string, quantity: number) {
   console.log('Update quantity', itemId, quantity);
 }
-
-
-export async function getData() {
-  const session = await auth();
-  const apiToken = session?.token;
-
-  // await fetch(..., { headers: { Authorization: `Bearer ${apiToken}` } })
-}
