@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 
 interface ButtonProps {
+  disabled?:boolean,
     className?:string,
   children: ReactNode;
   variant?: "primary" | "secondary";
@@ -9,6 +10,7 @@ interface ButtonProps {
 }
 
 export default function Button({
+  disabled,
   className,
   children,
   variant = "primary",
@@ -31,9 +33,9 @@ export default function Button({
   };
 
   return (
-    <button
+    <button disabled={disabled}
       onClick={onClick}
-      className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
+      className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${className} ${disabled ? 'disabled:bg-gray-300 disabled:cursor-not-allowed' : ''}`}
     >
       {children}
     </button>
