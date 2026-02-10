@@ -1,0 +1,64 @@
+import type { NextAuthConfig } from 'next-auth';
+
+export const authConfig = {
+  pages: {
+    signIn: '/login',
+  },
+  callbacks: {
+    authorized({ auth, request: { nextUrl } }) {
+      const isLoggedIn = !!auth?.user;
+      const pathname = nextUrl.pathname;
+
+      const AUTH_ROUTES = ["/login", "/register"];
+
+      const PROTECTED_ROUTES = [
+        // "/shoppingcart",
+        "/checkout",
+        "/orders",
+        "/account",
+      ];
+
+      const isAuthRoute = AUTH_ROUTES.some(route =>
+        pathname.startsWith(route)
+      );
+
+      const isProtectedRoute = PROTECTED_ROUTES.some(route =>
+        pathname.startsWith(route)
+      );
+
+      if (isProtectedRoute && !isLoggedIn) {
+        return false;
+      }
+
+      if (isAuthRoute && isLoggedIn) {
+        return Response.redirect(new URL("/", nextUrl));
+      }
+
+      return true;
+    },
+
+
+    jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        // @ts-ignore - login() function returns the token in the user object
+        token.accessToken = user.token;
+      }
+      return token;
+    },
+
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string;
+      }
+
+      // Create the session.token property
+      // @ts-ignore
+      session.token = token.accessToken;
+
+      return session;
+    },
+
+  },
+  providers: []
+} satisfies NextAuthConfig;
