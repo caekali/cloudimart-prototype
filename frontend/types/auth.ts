@@ -1,19 +1,18 @@
-import { ApiResponse } from "./api_response";
-import { ContactDetails, User } from "./user";
+import { User } from "./user";
 
 
-export interface PasswordResetResponse {
-  success: boolean;
-  message?: string;
-}
 
-export interface RegisterResponse {
-  success: boolean;
-  message?: string;
-}
 
 
 export interface SigninResponse {
   user: User;
   token: string;
+}
+
+
+export interface RegisterFormData {
+  name: string;
+  email: string;
+  password: string;
+  phone: string;
 }
