@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,7 +16,7 @@ Route::get('/products/slug/{slug}', [ProductController::class, 'showBySlug']);
 Route::post('/products', [ProductController::class, 'store']);
 Route::post('/products/search', [ProductController::class, 'search']);
 
-// Route::get('/profile', [UserController::class, 'getUser'])->middleware('auth:sanctum');
+Route::get('/profile', [UserController::class, 'getProfile'])->middleware('auth:sanctum');
 
 Route::prefix('/auth')->group(function () {
     Route::post('/signup', [AuthController::class, 'signup']);
