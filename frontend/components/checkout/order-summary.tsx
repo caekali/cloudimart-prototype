@@ -1,5 +1,6 @@
+import { CartItem } from '@/types/cart';
+import { DeliveryLocation } from '@/types/location';
 import React from 'react';
-import { CartItem, DeliveryLocation } from '@/types';
 
 interface OrderSummaryProps {
     items: CartItem[];

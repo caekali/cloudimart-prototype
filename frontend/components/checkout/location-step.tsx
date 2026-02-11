@@ -1,8 +1,9 @@
-import React from "react";
-import { DeliveryLocation } from "@/types";
 import { MapPin, CheckCircle } from "lucide-react";
 import clsx from "clsx";
 import Button from "@/components/ui/button";
+import { DeliveryLocation } from "@/types/location";
+import { getDeliveryLocations } from "@/api/location";
+import { Suspense } from "react";
 
 interface LocationStepProps {
   locations: DeliveryLocation[];
@@ -13,14 +14,16 @@ interface LocationStepProps {
   isCompleted: boolean;
 }
 
-export const LocationStep: React.FC<LocationStepProps> = ({
+export default function LocationStep({
   locations,
   selectedLocation,
   onSelectCallback,
   onNext,
   isActive,
   isCompleted,
-}) => {
+}: LocationStepProps) {
+
+
   if (!isActive && !isCompleted) {
     return (
       <div className="bg-card p-6 rounded-xl border border-border opacity-50 pointer-events-none">
@@ -101,4 +104,4 @@ export const LocationStep: React.FC<LocationStepProps> = ({
       </div>
     </div>
   );
-};
+}

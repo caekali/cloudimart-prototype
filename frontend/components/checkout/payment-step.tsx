@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { ShieldCheck, AlertCircle } from "lucide-react";
 import { CartItem } from "@/types/cart";
-import { DeliveryLocation } from "@/types";
 import { ContactDetails } from "@/types/user";
 import Button from "../ui/button";
+import { DeliveryLocation } from "@/types/location";
 
 interface PaymentStepProps {
   items: CartItem[];
