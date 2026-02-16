@@ -3,15 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ConfirmDeliveryRequest;
+use App\Http\Resources\DeliveryDetailResource;
+use App\Http\Resources\DeliveryResource;
 use App\Models\Delivery;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\Response;
 
 class DeliveryController extends BaseController
 {
+
+    public function index()
+    {
+        $user = Auth::user();
+         $deliveries = Delivery::with('order.user')->where("delivery_person_id",$user->id)->orderBy('status')
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return $this->successResponse(DeliveryResource::collection($deliveries));
+    
+    }
+
      #[OA\Post(
         path: "/confirm-delivery",
         summary: "Confirm Delivery",
@@ -32,9 +46,22 @@ class DeliveryController extends BaseController
             new OA\Response(response: Response::HTTP_INTERNAL_SERVER_ERROR, description: "Internal Server Error")
         ]
     )]
+
+    public function show($id)
+    {
+        $user = Auth::user();
+
+        $delivery = Delivery::with(['order', 'order.user', 'location'])->findOrFail($id);
+        
+        // if($delivery->delivery_person_id != $user->id){
+        //     return $this->errorResponse(message:"Not Authorized to handle this delivery",status_code:403);
+        // }
+
+        return $this->successResponse(new DeliveryDetailResource($delivery));
+    }
     public function confirmDelivery(ConfirmDeliveryRequest $request)
     {
-        $data = $request->validate();
+        $data = $request->validated();
 
         // Find the order
         $order = Order::where('order_id', $request->order_id)->first();
@@ -42,10 +69,12 @@ class DeliveryController extends BaseController
             return $this->errorResponse('Order not found.',null, 404);
         }
 
-        // Find the delivery record for this order and phone
-        $delivery = Delivery::where('order_id', $order->id)
-            ->where('customer_phone', $request->customer_phone)
-            ->first();
+        if($order->payment_status != "paid"){
+            return $this->errorResponse('Payment not complete for this order.',null, 400);
+
+        }
+
+        $delivery = Delivery::where('order_id', $order->id)->first();
 
         if (!$delivery) {
             return $this->errorResponse('Delivery record not found.',null, 404);
@@ -58,6 +87,7 @@ class DeliveryController extends BaseController
         $delivery->update([
             'status' => 'delivered',
             'delivered_at' => now(),
+            'collector_phone' => $data['collector_phone']
         ]);
 
         $order->update(['status' => 'delivered']);

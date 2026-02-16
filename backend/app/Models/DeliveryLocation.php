@@ -8,6 +8,7 @@ class DeliveryLocation extends Model
 {
     protected $fillable = [
         "name",
+        "code",
         "allowed"
     ];
 }

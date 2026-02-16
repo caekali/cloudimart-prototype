@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('order_id')->constrained()->cascadeOnDelete();
             $table->foreignId('delivery_person_id')->nullable()->constrained('users')->nullOnDelete();
-            $table->string('customer_phone');
+            $table->string('collector_phone')->nullable();
+            $table->foreignId('delivery_location_id')->constrained()->cascadeOnDelete();
             $table->enum('status', ['pending', 'delivered'])->default('pending');
             $table->timestamp('delivered_at')->nullable();
             $table->timestamps();

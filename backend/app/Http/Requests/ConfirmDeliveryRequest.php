@@ -11,7 +11,7 @@ class ConfirmDeliveryRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,7 @@ class ConfirmDeliveryRequest extends FormRequest
     {
         return [
             'order_id' => 'required|string',
-            'customer_phone' => 'required|string',
+            'collector_phone' => 'required|string',
         ];
     }
 }

@@ -61,3 +61,9 @@ Route::middleware('auth:sanctum')
     });
 
 Route::post('/paychangu/webhook', [PaymentController::class, 'handleWebhook']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/deliveries', [DeliveryController::class, 'index']);
+    Route::post('/deliveries/confirm', [DeliveryController::class, 'confirmDelivery']);
+    Route::get('/deliveries/{id}', [DeliveryController::class, 'show']);
+});
