@@ -38,7 +38,7 @@ class CheckoutController extends BaseController
     )]
     public function checkout(CheckoutRequest $request,PayChanguService $payChangu)
     {
-        $data = $request->validate();
+        $data = $request->validated();
         $user = $request->user();
 
         // Get user's cart
