@@ -1,6 +1,7 @@
 <?php
 
 use App\Helpers\ApiResponse;
+use App\Http\Middleware\EnsureDeliveryPerson;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -18,7 +19,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+          $middleware->alias([
+        'subscribed' => EnsureDeliveryPerson::class
+    ])
+    ;$middleware->validateCsrfTokens(except: [
+        'api/paychangu/webhook',
+    ]);
+
+  
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (ValidationException $e) {
