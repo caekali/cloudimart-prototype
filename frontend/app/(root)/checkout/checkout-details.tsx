@@ -11,7 +11,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { DeliveryLocation } from "@/types/location";
 import LocationStep from "@/components/checkout/location-step";
-import { checkout, placeOrder } from "@/api/orders";
+import { checkout } from "@/api/orders";
 import { useSession } from "next-auth/react";
 
 type CheckoutStep = 1 | 2 | 3;
