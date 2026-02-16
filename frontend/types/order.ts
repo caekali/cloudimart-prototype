@@ -1,23 +1,42 @@
 import { CartItem } from "./cart";
-import { DeliveryLocation } from "./location";
-import { ContactDetails } from "./user";
 
+export interface CustomerDetails {
+    id: number;
+    name: string;
+    email: string;
+    phone?: string;
+}
 
 export interface OrderItem {
-    product_name:string;
-    quantity:number;
-    price:number;
-    subtotal:number;
+    id: number;
+    product_id: number;
+    name: string;
+    slug: string;
+    image: string;
+    quantity: number;
+    price: number;
+    total_price: number;
+}
 
+export enum OrderStatus {
+    PENDING = "pending",
+    PROCESSING = "processing",
+    SHIPPED = "shipped",
+    DELIVERED = "delivered",
+    CANCELLED = "cancelled",
 }
 
 export interface Order {
+    id: number;
     order_id: string;
+    customer: CustomerDetails;
     items: OrderItem[];
-    payment_status: string;
+    status: OrderStatus;
+    payment_status: "pending" | "paid" | "failed";
     total_amount: number;
     delivery_location: string;
-    contact: ContactDetails;
-    status: 'pending' | 'paid' | 'failed' | 'delivered';
-    created_at: string;
+    placed_at: string;
+    updated_at: string;
+    deliveryDate?: string;
+    collectorPhoneNumber?: string;
 }
