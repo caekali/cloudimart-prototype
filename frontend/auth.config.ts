@@ -2,19 +2,19 @@ import type { NextAuthConfig } from 'next-auth';
 
 export const authConfig = {
   pages: {
-    signIn: '/login',
+    signIn: '/sigin',
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
       const pathname = nextUrl.pathname;
 
-      const AUTH_ROUTES = ["/login", "/register"];
+      const AUTH_ROUTES = ["/signin", "/signup"];
 
       const PROTECTED_ROUTES = [
         // "/shoppingcart",
         "/checkout",
-        "/orders",
+        // "//orders",
         "/account",
       ];
 

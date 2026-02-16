@@ -20,7 +20,7 @@ export default function LoginPage() {
   return (
     <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-lg">
       <h1 className="text-3xl font-extrabold text-gray-900 text-center mb-6">
-        Login to Cloudimart
+        Signin to Cloudimart
       </h1>
 
       <form action={formAction} className="space-y-6">

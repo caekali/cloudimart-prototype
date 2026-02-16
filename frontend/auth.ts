@@ -1,7 +1,7 @@
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import { authConfig } from "./auth.config";
-import { login } from "./api/auth";
+import { signin } from "./api/auth";
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
     ...authConfig,
@@ -15,13 +15,14 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
                 if (!credentials?.email || !credentials?.password) return null;
 
                 try {
-                    const res = await login(credentials.email as string, credentials.password as string);
+                    const res = await signin(credentials.email as string, credentials.password as string);
 
                     if (res && res.user) {
                         return {
                             id: res.user.id,
                             email: res.user.email,
                             name: res.user.name,
+                            role:res.user.role,
                             token: res.token
                         };
                     }

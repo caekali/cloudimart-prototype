@@ -3,7 +3,7 @@ import { ApiError, ApiResponse } from "@/types/api_response";
 import { RegisterFormData, SigninResponse } from "@/types/auth";
 import { apiFetch } from "./client";
 
-export async function login(email: any, password: any): Promise<SigninResponse> {
+export async function signin(email: any, password: any): Promise<SigninResponse> {
 
     await fetch("http://localhost:8000/sanctum/csrf-cookie", {
         credentials: "include",
@@ -27,7 +27,7 @@ export async function login(email: any, password: any): Promise<SigninResponse> 
 
 
 
-export async function logout(): Promise<any> {
+export async function signout(): Promise<any> {
 
 }
 
