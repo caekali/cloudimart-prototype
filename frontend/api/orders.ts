@@ -93,7 +93,6 @@ export async function getOrder(orderId: string, token: string): Promise<Order> {
     throw new ApiError("Failed to get order", 500);
   }
 
-  console.log(res.data);
 
   return res.data;
 }

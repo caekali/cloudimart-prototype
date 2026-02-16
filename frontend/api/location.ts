@@ -1,6 +1,7 @@
 import { BASE_URL } from "@/constants/base_url";
 import { ApiResponse } from "@/types/api_response";
 import { DeliveryLocation } from "@/types/location";
+import { apiFetch } from "./client";
 
 
 export const DELIVERY_LOCATIONS: DeliveryLocation[] = [
@@ -13,19 +14,13 @@ export const DELIVERY_LOCATIONS: DeliveryLocation[] = [
 
 export async function getDeliveryLocations(): Promise<DeliveryLocation[]> {
 
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(DELIVERY_LOCATIONS)
-    }, 500);
-  });
 
-  // const res = await fetch(`${BASE_URL}/delivery-locations'`);
-  // if (!res.ok) throw new Error('Failed to fetch locations');
-  // const json = (await res.json()) as ApiResponse<DeliveryLocation[]>
+  const res = await apiFetch<DeliveryLocation[]>(
+    `${BASE_URL}/delivery-locations`,
+    {
+      cache: "no-store",
+    }
 
-  // if (!json.success || !json.data) {
-  //   throw new Error(json.message || "Invalid API response")
-  // }
-  // return json.data
-
+  );
+  return res.data ?? []
 }
