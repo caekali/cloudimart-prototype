@@ -17,17 +17,20 @@ class DeliveryLocationSeeder extends Seeder
      */
     public function run(): void
     {
-        $locations = [
-            "Mzuzu University",
-            "Mzuzu Central Hospital",
-            "Luwinga",
-            "Area 1B",
-            "Kaka"
-        ];
+            $locations = [
+        ["name" => "Mzuzu University", "code" => "MZ"],
+        ["name" => "Mzuzu Central Hospital", "code" => "MCH"],
+        ["name" => "Luwinga", "code" => "LA"],
+        ["name" => "Area 1B", "code" => "A1B"],
+        ["name" => "Kaka", "code" => "KK"],
+    ];
 
-        foreach($locations as $loc){
-            DeliveryLocation::create(["name" => $loc]);
-        }
+    foreach ($locations as $loc) {
+        DeliveryLocation::create([
+            "name" => $loc['name'],
+            "code" => $loc['code']
+        ]);
+    }
 
     }
 }
