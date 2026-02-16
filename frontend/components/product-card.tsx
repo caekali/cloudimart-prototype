@@ -1,8 +1,13 @@
+"use client";
+
 import { Product } from "@/types/product";
 import { ShoppingCart, Star } from "lucide-react";
 import Link from "next/link";
 import { useCart } from "@/context/cart-context";
 import Button from "./ui/button";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 interface ProductCardProps {
   product: Product;
@@ -10,6 +15,25 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const { addItem } = useCart();
+  const { data: session } = useSession();
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const handleAddToCart = async () => {
+    if (!session) {
+      router.push(`/login?callbackUrl=${window.location.pathname}`);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await addItem(product.id);
+    } catch (err) {
+      console.error("Failed to add item to cart:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="bg-card rounded-lg shadow-sm border border-border overflow-hidden flex flex-col group transition-all duration-300 hover:shadow-md">
@@ -51,10 +75,17 @@ export default function ProductCard({ product }: ProductCardProps) {
 
           <Button
             className="w-full flex items-center justify-center gap-2"
-            onClick={() => addItem(product)}
+            onClick={handleAddToCart}
+            disabled={loading}
           >
-            <ShoppingCart className="w-4 h-4" />
-            <span className="text-sm">Add to Cart</span>
+            {loading ? (
+              <span className="text-sm">Adding...</span>
+            ) : (
+              <>
+                <ShoppingCart className="w-4 h-4" />
+                <span className="text-sm">Add to Cart</span>
+              </>
+            )}
           </Button>
         </div>
       </div>
