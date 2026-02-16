@@ -11,7 +11,7 @@ class CheckoutRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,7 @@ class CheckoutRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'location_id' => 'required|string|exists:deliver_locations,id',
+            'location_id' => 'required|integer|exists:delivery_locations,id',
         ];
     }
 }
