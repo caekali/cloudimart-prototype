@@ -2,14 +2,22 @@ import { CartItem } from "./cart";
 import { DeliveryLocation } from "./location";
 import { ContactDetails } from "./user";
 
+
+export interface OrderItem {
+    product_name:string;
+    quantity:number;
+    price:number;
+    subtotal:number;
+
+}
+
 export interface Order {
-    id: string;
-    items: CartItem[];
-    subtotal: number;
-    deliveryFee: number;
-    total: number;
-    location: DeliveryLocation;
+    order_id: string;
+    items: OrderItem[];
+    payment_status: string;
+    total_amount: number;
+    delivery_location: string;
     contact: ContactDetails;
     status: 'pending' | 'paid' | 'failed' | 'delivered';
-    createdAt: string;
+    created_at: string;
 }

@@ -12,8 +12,7 @@ export default function CartPage() {
     subtotal,
     removeItem,
     clearCart,
-    incrementItem,
-    decrementItem,
+   updateQuantity
   } = useCart();
 
   if (cart.items.length === 0) {
@@ -57,8 +56,7 @@ export default function CartPage() {
              <CartItemRow
                   key={item.id}
                   item={item}
-                  incrementItem={incrementItem}
-                  decrementItem={decrementItem}
+                  updateQuantity={updateQuantity}
                   removeItem={removeItem}
                 />
             ))}

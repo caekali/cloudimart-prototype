@@ -1,97 +1,81 @@
 "use client";
 
-import { CartItem } from "@/types/cart";
-import { Product } from "@/types/product";
-import React, { createContext, useContext, useReducer, ReactNode } from "react";
+import React, { createContext, useContext, useReducer, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { CartState } from "@/types/cart";
+import { cartService } from "@/api/cart";
 
 
-
-interface CartState {
-  items: CartItem[];
+interface CartContextValue {
+  cart: CartState;
+  totalItems: number;
+  subtotal: number;
+  refreshCart: () => Promise<void>;
+  addItem: (productId: string) => Promise<void>;
+  removeItem: (itemId: string) => Promise<void>;
+  updateQuantity: (itemId: string, quantity: number) => Promise<void>;
+  clearCart: () => void;
 }
 
 type CartAction =
-  | { type: "ADD_ITEM"; payload: Product }
-  | { type: "REMOVE_ITEM"; payload: string }
-  | { type: "INCREMENT_ITEM"; payload: string }
-  | { type: "DECREMENT_ITEM"; payload: string }
+  | { type: "HYDRATE_CART"; payload: CartState }
   | { type: "CLEAR_CART" };
 
-const CartContext = createContext<
-  | {
-      cart: CartState;
-      totalItems: number;
-      subtotal: number;
-      addItem: (product: Product) => void;
-      removeItem: (id: string) => void;
-      incrementItem: (id: string) => void;
-      decrementItem: (id: string) => void;
-      clearCart: () => void;
-    }
-  | undefined
->(undefined);
+const CartContext = createContext<CartContextValue | undefined>(undefined);
 
-const cartReducer = (state: CartState, action: CartAction): CartState => {
+function cartReducer(_: CartState, action: CartAction): CartState {
   switch (action.type) {
-    case "ADD_ITEM": {
-      const existingItem = state.items.find(
-        (item) => item.id === action.payload.id,
-      );
-      if (existingItem) {
-        return {
-          ...state,
-          items: state.items.map((item) =>
-            item.id === action.payload.id
-              ? { ...item, quantity: item.quantity + 1 }
-              : item,
-          ),
-        };
-      }
-      return {
-        ...state,
-        items: [...state.items, { ...action.payload, quantity: 1 }],
-      };
-    }
-    case "REMOVE_ITEM":
-      return {
-        ...state,
-        items: state.items.filter((item) => item.id !== action.payload),
-      };
-    case "INCREMENT_ITEM":
-      return {
-        ...state,
-        items: state.items.map((item) =>
-          item.id === action.payload
-            ? { ...item, quantity: item.quantity + 1 }
-            : item,
-        ),
-      };
-    case "DECREMENT_ITEM":
-      return {
-        ...state,
-        items: state.items
-          .map((item) =>
-            item.id === action.payload
-              ? { ...item, quantity: item.quantity - 1 }
-              : item,
-          )
-          .filter((item) => item.quantity > 0),
-      };
+    case "HYDRATE_CART":
+      return action.payload;
     case "CLEAR_CART":
       return { items: [] };
     default:
-      return state;
+      return { items: [] };
   }
-};
+}
 
-export const CartProvider = ({ children }: { children: ReactNode }) => {
+export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cart, dispatch] = useReducer(cartReducer, { items: [] });
+  const { data: session } = useSession();
+  const token = session?.token; // or however you set your token in jwt callback
 
-  const totalItems = cart.items.reduce((acc, item) => acc + item.quantity, 0);
-  const subtotal = cart.items.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0,
-  );
+  const totalItems = cart.items.reduce((acc, i) => acc + i.quantity, 0);
+  const subtotal = cart.items.reduce((acc, i) => acc + i.price * i.quantity, 0);
+
+  const refreshCart = async () => {
+    if (!token) return;
+    const cartData = await cartService.getCart(token);
+    dispatch({ type: "HYDRATE_CART", payload: cartData });
+  };
+
+  const addItem = async (productId: string) => {
+    if (!token) throw new Error("User not authenticated");
+    const cartData = await cartService.addItem(productId, token);
+    dispatch({ type: "HYDRATE_CART", payload: cartData });
+  };
+
+  const removeItem = async (itemId: string) => {
+    if (!token) throw new Error("User not authenticated");
+    const cartData = await cartService.removeItem(itemId, token);
+    dispatch({ type: "HYDRATE_CART", payload: cartData });
+  };
+
+  const updateQuantity = async (itemId: string, quantity: number) => {
+    if (!token) throw new Error("User not authenticated");
+    const cartData = await cartService.updateQuantity(itemId, quantity, token);
+        console.log(cartData)
+
+    dispatch({ type: "HYDRATE_CART", payload: cartData });
+  };
+
+  const clearCart = () => {
+    dispatch({ type: "CLEAR_CART" });
+  };
+
+  // Hydrate cart when session changes
+  useEffect(() => {
+    if (token) refreshCart();
+  }, [token]);
 
   return (
     <CartContext.Provider
@@ -99,24 +83,20 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         cart,
         totalItems,
         subtotal,
-        addItem: (product) => dispatch({ type: "ADD_ITEM", payload: product }),
-        removeItem: (id) => dispatch({ type: "REMOVE_ITEM", payload: id }),
-        incrementItem: (id) =>
-          dispatch({ type: "INCREMENT_ITEM", payload: id }),
-        decrementItem: (id) =>
-          dispatch({ type: "DECREMENT_ITEM", payload: id }),
-        clearCart: () => dispatch({ type: "CLEAR_CART" }),
+        refreshCart,
+        addItem,
+        removeItem,
+        updateQuantity,
+        clearCart,
       }}
     >
       {children}
     </CartContext.Provider>
   );
-};
+}
 
-export const useCart = () => {
-  const context = useContext(CartContext);
-  if (!context) {
-    throw new Error("useCart must be used within a CartProvider");
-  }
-  return context;
-};
+export function useCart() {
+  const ctx = useContext(CartContext);
+  if (!ctx) throw new Error("useCart must be used within CartProvider");
+  return ctx;
+}

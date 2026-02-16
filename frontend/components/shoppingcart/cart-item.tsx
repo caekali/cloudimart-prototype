@@ -1,19 +1,15 @@
-import { CartItem } from "@/context/cart-context";
+import { CartItem } from "@/types/cart";
 import { Minus, Plus, Trash, Trash2 } from "lucide-react";
-
 
 interface CartItemRowProps {
   item: CartItem;
-  incrementItem: (id: string) => void;
-  decrementItem: (id: string) => void;
-
+  updateQuantity: (id: string, quantity: number) => void;
   removeItem: (id: string) => void;
 }
 
 export function CartItemRow({
   item,
-  decrementItem,
-  incrementItem,
+  updateQuantity,
   removeItem,
 }: CartItemRowProps) {
   return (
@@ -33,7 +29,9 @@ export function CartItemRow({
         <div className="flex justify-between items-start">
           <div>
             <h3 className="font-semibold text-lg text-gray-800">{item.name}</h3>
-            <p className="text-muted-foreground text-sm capitalize">{item.category}</p>
+            <p className="text-muted-foreground text-sm capitalize">
+              {item.category}
+            </p>
           </div>
           <button
             onClick={() => removeItem(item.id)}
@@ -46,7 +44,7 @@ export function CartItemRow({
         <div className="flex justify-between items-end mt-4">
           <div className="flex items-center gap-3 bg-gray-50 rounded-full p-1 border border-gray-200">
             <button
-              onClick={() => decrementItem(item.id)}
+              onClick={() => updateQuantity(item.id,Math.max(1, item.quantity - 1))}
               className="p-1 rounded-full hover:bg-white shadow-sm transition-all"
             >
               <Minus size={16} className="text-gray-600" />
@@ -55,7 +53,7 @@ export function CartItemRow({
               {item.quantity}
             </span>
             <button
-              onClick={() => incrementItem(item.id)}
+              onClick={() => updateQuantity(item.id,item.quantity + 1)}
               className="p-1 rounded-full hover:bg-white shadow-sm transition-all"
             >
               <Plus size={16} className="text-gray-600" />
