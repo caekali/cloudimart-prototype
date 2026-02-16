@@ -1,11 +1,11 @@
 "use client";
-import React, { use, useState } from "react";
+import React, { use, useActionState, useEffect, useState } from "react";
 
 import { useRouter } from "next/navigation";
 import FormField from "@/components/ui/form-field";
 import Link from "next/link";
 import Button from "@/components/ui/button";
-import { register } from "@/api/auth";
+import { registerAction } from "@/lib/actions/signup-action";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -16,9 +16,19 @@ export default function RegisterPage() {
     password: "",
     phone: "",
   });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+
+  const [state, formAction, isPending] = useActionState(
+    registerAction,
+    undefined,
+  );
+
+  useEffect(() => {
+    if (state?.success === true && state?.error === undefined) {
+      setTimeout(() => {
+        router.push(`/login?signedUp=true`);
+      }, 1000);
+    }
+  }, [state]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -28,70 +38,13 @@ export default function RegisterPage() {
     }));
   };
 
-  const validateEmail = (email: string) => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(String(email).toLowerCase());
-  };
-
-  const validatePassword = (password: string) => password.length >= 6;
-
-  const validatePhone = (phone: string) => {
-    const re = /^\+?[0-9]{7,15}$/;
-    return re.test(phone);
-  };
-
-  const validateName = (name: string) => name.trim().length > 0;
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setSuccess(null);
-
-    const { name, email, password, phone } = formData;
-
-    // Client-side validation
-    if (!validateName(name)) {
-      setError("Please enter your name.");
-      return;
-    }
-    if (!validateEmail(email)) {
-      setError("Please enter a valid email address.");
-      return;
-    }
-    if (!validatePassword(password)) {
-      setError("Password must be at least 6 characters long.");
-      return;
-    }
-    if (!validatePhone(phone)) {
-      setError("Please enter a valid phone number.");
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const result = await register(formData);
-      if (result.success) {
-        setSuccess(result.message || "Account created successfully!");
-        setFormData({ name: "", email: "", password: "", phone: "" });
-        setTimeout(() => router.push("/login"), 2000);
-      } else {
-        setError(result.message || "Registration failed.");
-      }
-    } catch (err: any) {
-      setError(err.message || "Unexpected error occurred.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-lg">
       <h1 className="text-3xl font-extrabold text-gray-900 text-center mb-6">
         Create Your Account
       </h1>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form action={formAction} className="space-y-6">
         <FormField
           id="name"
           label="Full Name"
@@ -100,7 +53,7 @@ export default function RegisterPage() {
           onChange={handleChange}
           placeholder="full name"
           required
-          disabled={loading}
+          error={state?.error?.name}
         />
         <FormField
           id="email"
@@ -110,7 +63,7 @@ export default function RegisterPage() {
           onChange={handleChange}
           placeholder="email"
           required
-          disabled={loading}
+          error={state?.error?.email}
         />
         <FormField
           id="phone"
@@ -120,7 +73,7 @@ export default function RegisterPage() {
           onChange={handleChange}
           placeholder="phone"
           required
-          disabled={loading}
+          error={state?.error?.firstname}
         />
         <FormField
           id="password"
@@ -130,36 +83,35 @@ export default function RegisterPage() {
           onChange={handleChange}
           placeholder="Minimum 6 characters"
           required
-          disabled={loading}
+          error={state?.error?.password}
         />
 
-        {error && (
+        {state?.success === false && state?.message && (
           <div
             className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
             role="alert"
           >
-            <span className="block sm:inline">{error}</span>
+            <span className="block sm:inline">{state?.message}</span>
           </div>
         )}
-
-        {success && (
+        {state?.success === true && state?.message && (
           <div
             className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
             role="alert"
           >
-            <span className="block sm:inline">{success}</span>
+            <span className="block sm:inline">{state?.message}</span>
           </div>
         )}
 
         <Button
-          disabled={loading}
+          disabled={isPending}
           className={`w-full flex justify-center ${
-            loading
+            isPending
               ? "bg-gray-400 cursor-not-allowed"
               : "bg-orange-600 hover:bg-orange-700"
           }`}
         >
-          {loading ? (
+          {isPending ? (
             <span className="flex items-center">
               <svg
                 className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"

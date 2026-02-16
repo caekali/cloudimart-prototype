@@ -1,6 +1,7 @@
 import { BASE_URL } from "@/constants/base_url";
-import { ApiResponse } from "@/types/api_response";
-import { RegisterFormData, RegisterResponse, SigninResponse } from "@/types/auth";
+import { ApiError, ApiResponse } from "@/types/api_response";
+import { RegisterFormData, SigninResponse } from "@/types/auth";
+import { apiFetch } from "./client";
 
 export async function login(email: any, password: any): Promise<SigninResponse> {
 
@@ -8,28 +9,20 @@ export async function login(email: any, password: any): Promise<SigninResponse> 
         credentials: "include",
     });
 
-    const res = await fetch(`${BASE_URL}/auth/signin/`, {
+    const res = await apiFetch<SigninResponse>(`${BASE_URL}/auth/signin/`, {
         method: "POST",
         credentials: "include",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             email: email,
             password: password,
         }),
     })
 
-    if (!res.ok) {
-        throw new Error(`Failed to authenticate`);
+    if (!res.data) {
+        throw new Error("Missing user details")
     }
 
-
-    const json = (await res.json()) as ApiResponse<SigninResponse>;
-    if (!json.success || !json.data) {
-        throw new Error(json.message || "Invalid response");
-    }
-
-    return json.data
-
+    return res.data
 }
 
 
@@ -40,26 +33,15 @@ export async function logout(): Promise<any> {
 
 
 
-export async function register(data: RegisterFormData): Promise<ApiResponse<null>> {
-    const formData = new FormData();
-    for (const key in data) {
-        formData.append(key, data[key as keyof RegisterFormData]);
-    }
+export async function register(data: RegisterFormData): Promise<ApiResponse<void>> {
+    // const formData = new FormData();
+    // for (const key in data) {
+    //     formData.append(key, data[key as keyof RegisterFormData]);
+    // }
 
-    const res = await fetch(`${BASE_URL}/auth/signup`, {
+    const res = await apiFetch<void>(`${BASE_URL}/auth/signup`, {
         method: "POST",
-        body: formData
+        body: JSON.stringify(data)
     });
-
-
-    if (!res.ok) {
-        throw new Error(`Failed to authenticate`);
-    }
-
-    const json = (await res.json()) as ApiResponse<null>;
-    if (!json.success) {
-        throw new Error(json.message || "Invalid response");
-    }
-
-    return json
+    return res
 }

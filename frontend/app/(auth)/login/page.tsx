@@ -2,7 +2,7 @@
 
 import Button from "@/components/ui/button";
 import FormField from "@/components/ui/form-field";
-import { authenticate } from "@/lib/actions";
+import {  authenticateAction } from "@/lib/actions/signin-action";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import React, { useActionState, useState } from "react";
@@ -12,8 +12,8 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
-  const [errorMessage, formAction, isPending] = useActionState(
-    authenticate,
+  const [state, formAction, isPending] = useActionState(
+    authenticateAction,
     undefined,
   );
 
@@ -34,8 +34,7 @@ export default function LoginPage() {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="email"
           required
-          disabled={isPending}
-          error={null}
+          error={state?.error?.email}
         />
         <FormField
           id="password"
@@ -46,15 +45,15 @@ export default function LoginPage() {
           placeholder="password"
           required
           disabled={isPending}
-          error={null}
+          // error={state?.error?.password}
         />
 
-        {errorMessage && (
+        {state?.success === false && state?.message && (
           <div
             className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
             role="alert"
           >
-            <span className="block sm:inline">{errorMessage}</span>
+            <span className="block sm:inline">{state?.message}</span>
           </div>
         )}
 
