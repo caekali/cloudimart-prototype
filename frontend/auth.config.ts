@@ -43,6 +43,10 @@ export const authConfig = {
         token.id = user.id;
         // @ts-ignore - login() function returns the token in the user object
         token.accessToken = user.token;
+
+        // @ts-ignore - login() function returns the token in the user object
+        token.role = user.role;
+
       }
       return token;
     },
@@ -50,6 +54,8 @@ export const authConfig = {
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string;
+        // @ts-ignore
+        session.user.role = token.role;
       }
 
       // Create the session.token property
