@@ -1,7 +1,8 @@
 import { auth } from "@/auth";
 import { BASE_URL } from "@/constants/base_url";
-import { ApiResponse } from "@/types/api_response";
+import { ApiError } from "@/types/api_response";
 import { ContactDetails } from "@/types/user";
+import { apiFetch } from "./client";
 
 
 
@@ -9,17 +10,19 @@ export async function getContactDetails(): Promise<ContactDetails> {
     const session = await auth();
     const apiToken = session?.token;
 
-    const res = await fetch(`${BASE_URL}/profile`, {
-        headers: {
-            'Authorization': `Bearer ${apiToken}`
-        }
-    });
-    if (!res.ok) throw new Error('Failed to fetch user details');
-    const json = (await res.json()) as ApiResponse<ContactDetails>
+    const res = await apiFetch<ContactDetails>(`${BASE_URL}/profile`, {
+        cache: "no-store",
+    },
+        apiToken
+    )
 
-    if (!json.success || !json.data) {
-        throw new Error(json.message || "Invalid API response")
+    if (!res.data) {
+        throw new ApiError(
+            "User data missing in response",
+            500
+        );
     }
-    return json.data
+
+    return res.data
 
 }
