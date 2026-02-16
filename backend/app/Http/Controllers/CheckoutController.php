@@ -8,6 +8,7 @@ use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Delivery;
+use App\Models\DeliveryLocation;
 use App\Services\PayChanguService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -41,6 +42,8 @@ class CheckoutController extends BaseController
         $data = $request->validated();
         $user = $request->user();
 
+        $location = DeliveryLocation::findOrFail($data["location_id"]);
+
         // Get user's cart
         $cart = Cart::with('items.product')->where('user_id', $user->id)->first();
         if (!$cart || $cart->items->isEmpty()) {
@@ -58,11 +61,10 @@ class CheckoutController extends BaseController
         DB::beginTransaction();
         try {
             $order = Order::create([
-                'order_id' => Str::uuid(),
+                'order_id' => Order::generateOrderId($location),
                 'user_id' => $user->id,
                 'total_amount' => $cart->items->sum(fn($item) => $item->quantity * $item->price),
                 'status' => 'pending',
-                'delivery_location_id' => $data["location_id"],
             ]);
 
             foreach ($cart->items as $item) {
@@ -78,8 +80,8 @@ class CheckoutController extends BaseController
             // delivery record
             Delivery::create([
                 'order_id' => $order->id,
-                'customer_phone' => $user->phone,
                 'status' => 'pending',
+                'delivery_location_id' => $data["location_id"],
             ]);
 
             // clear cart
