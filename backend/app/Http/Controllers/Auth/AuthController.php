@@ -58,6 +58,7 @@ class AuthController extends BaseController
                     "id" => $user->id,
             "name"=> $user->name,
             "email" => $user->email,
+            "role"=> $user->role
                 ],
                 'token' => $user->createToken('auth_token')->plainTextToken,
             ]);
