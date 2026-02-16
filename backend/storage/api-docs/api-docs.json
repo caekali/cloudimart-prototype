@@ -12,16 +12,449 @@
         }
     ],
     "paths": {
+        "/cart": {
+            "get": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Get user cart",
+                "operationId": "294e093bf29c111c01d8402121fb4f43",
+                "responses": {
+                    "200": {
+                        "description": "Cart retrieved successfully."
+                    }
+                }
+            }
+        },
+        "/cart/items": {
+            "post": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Add item to cart",
+                "operationId": "83c1c44d6a909613d13a701708e78786",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "product_id",
+                                    "quantity"
+                                ],
+                                "properties": {
+                                    "product_id": {
+                                        "description": "Product Id",
+                                        "type": "integer"
+                                    },
+                                    "quantity": {
+                                        "description": "Quantity",
+                                        "type": "integer",
+                                        "minimum": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Product added to cart"
+                    },
+                    "422": {
+                        "description": "Unprocessable entity"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/cart/items/{itemId}": {
+            "delete": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Remove item from cart",
+                "operationId": "2fad51ff609666f2e7400bf8402893c0",
+                "parameters": [
+                    {
+                        "name": "itemId",
+                        "in": "path",
+                        "description": "Cart item id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cart item removed."
+                    },
+                    "404": {
+                        "description": "Cart Not Found."
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Update cart item quantity",
+                "operationId": "8fbfd932324cb7decf36c5498455fb00",
+                "parameters": [
+                    {
+                        "name": "itemId",
+                        "in": "path",
+                        "description": "Cart item id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "quantity"
+                                ],
+                                "properties": {
+                                    "quantity": {
+                                        "description": "Quantity",
+                                        "type": "integer",
+                                        "minimum": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cart item updated."
+                    },
+                    "404": {
+                        "description": "Cart Not Found."
+                    }
+                }
+            }
+        },
+        "/cart/clear": {
+            "delete": {
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Remove all items from cart",
+                "operationId": "6c16eeec461bf91618968113b533465a",
+                "responses": {
+                    "200": {
+                        "description": "Cart cleared."
+                    }
+                }
+            }
+        },
         "/categories": {
             "get": {
                 "tags": [
                     "Categories"
                 ],
-                "summary": "Get categories",
+                "summary": "Get all categories",
                 "operationId": "ead5fb1cf2a7453acb2e37928a1b1eaf",
                 "responses": {
                     "200": {
                         "description": "Success"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Add a Category",
+                "operationId": "bb02f0320882db37f99574196577e446",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "description"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Electronics"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Electronic devices"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Category created"
+                    },
+                    "422": {
+                        "description": "Validation failed"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            }
+        },
+        "/categories/{id}": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Get single category",
+                "operationId": "4cdf41756315109f1efc72787db5830a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Category ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Delete a category",
+                "operationId": "f1b8af6e84bd52b9594d98bde748ebd6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Category ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Category deleted"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Update a category",
+                "operationId": "fad7d7ab8a8e415f1d330c72f3dd6f4e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Category ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Updated Name"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Updated description"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Category updated"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    },
+                    "422": {
+                        "description": "Validation failed"
+                    }
+                }
+            }
+        },
+        "/checkout": {
+            "post": {
+                "tags": [
+                    "Checkout"
+                ],
+                "summary": "Create order and initiate payment gateway",
+                "operationId": "8a7d86710ca8b0707ee4e0430f283735",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "location_id"
+                                ],
+                                "properties": {
+                                    "location_id": {
+                                        "description": "Delivery Location ID",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Cart is empty"
+                    },
+                    "422": {
+                        "description": "Unprocessable entity"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/confirm-delivery": {
+            "post": {
+                "tags": [
+                    "Deliveries"
+                ],
+                "summary": "Confirm Delivery",
+                "operationId": "2f5d91e7c05a827a0c7a51d52045b019",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "location_id"
+                                ],
+                                "properties": {
+                                    "order_id": {
+                                        "description": "Order ID",
+                                        "type": "string"
+                                    },
+                                    "customer_phone": {
+                                        "description": "Collector Phone Number",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Order Not Found"
+                    },
+                    "400": {
+                        "description": "Cart is empty"
+                    },
+                    "422": {
+                        "description": "Unprocessable entity"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/delivery-locations": {
+            "get": {
+                "tags": [
+                    "Delivery Locations"
+                ],
+                "summary": "Get delivery locations",
+                "operationId": "10581483cb890e656b7b30b47779e234",
+                "responses": {
+                    "200": {
+                        "description": "Delivery locations retrieved successfully."
+                    }
+                }
+            }
+        },
+        "/orders/{orderId}": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get single order",
+                "operationId": "89d630bcfa2fe280cc140a9819520e1e",
+                "parameters": [
+                    {
+                        "name": "orderId",
+                        "in": "path",
+                        "description": "Order ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Order retrieved."
+                    }
+                }
+            }
+        },
+        "/paychangu/webhook": {
+            "get": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Webhook for paychangu payment gatway for get payment notificaations",
+                "operationId": "79f3fbf60e04330c8c3d845b7a5bcacf",
+                "responses": {
+                    "200": {
+                        "description": "OK."
                     }
                 }
             }
@@ -69,6 +502,11 @@
                                         "description": "Product price",
                                         "type": "number",
                                         "format": "float"
+                                    },
+                                    "stock_quantity": {
+                                        "description": "Stock qauntity",
+                                        "type": "integer",
+                                        "minimum": 1
                                     },
                                     "image": {
                                         "description": "Product image",
@@ -151,13 +589,13 @@
                 }
             }
         },
-        "/products/{slug}": {
+        "/products/slug/{slug}": {
             "get": {
                 "tags": [
                     "Products"
                 ],
-                "summary": "Get products by slug",
-                "operationId": "457cfdc6fe4427d556c84c0031b7d365",
+                "summary": "Get product by slug",
+                "operationId": "ef1ab0315c267256fbf447d2adb39150",
                 "parameters": [
                     {
                         "name": "slug",
@@ -175,6 +613,20 @@
                     }
                 }
             }
+        },
+        "/profile": {
+            "get": {
+                "tags": [
+                    "Accounts"
+                ],
+                "summary": "Get user profile",
+                "operationId": "c08846d5dd388c9e0492eb50a8cf291f",
+                "responses": {
+                    "200": {
+                        "description": "Profile Retrived."
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -189,12 +641,40 @@
     },
     "tags": [
         {
+            "name": "Cart",
+            "description": "Cart"
+        },
+        {
             "name": "Categories",
             "description": "Categories"
         },
         {
+            "name": "Checkout",
+            "description": "Checkout"
+        },
+        {
+            "name": "Deliveries",
+            "description": "Deliveries"
+        },
+        {
+            "name": "Delivery Locations",
+            "description": "Delivery Locations"
+        },
+        {
+            "name": "Orders",
+            "description": "Orders"
+        },
+        {
+            "name": "Payments",
+            "description": "Payments"
+        },
+        {
             "name": "Products",
             "description": "Products"
+        },
+        {
+            "name": "Accounts",
+            "description": "Accounts"
         }
     ]
 }
