@@ -24,6 +24,6 @@ class Order extends Model
     }
 
     public function delivery_location(){
-        return $this->hasOne(DeliveryLocation::class);
+        return $this->belongsTo(DeliveryLocation::class);
     }
 }
