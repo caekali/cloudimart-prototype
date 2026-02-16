@@ -5,12 +5,14 @@ import { PaymentStep } from "@/components/checkout/payment-step";
 import { ContactStep } from "@/components/checkout/contact-step";
 import { useCart } from "@/context/cart-context";
 import { ContactDetails } from "@/types/user";
-import { useRouter } from "next/navigation";
+import { redirect, RedirectType, useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { DeliveryLocation } from "@/types/location";
 import LocationStep from "@/components/checkout/location-step";
+import { checkout, placeOrder } from "@/api/orders";
+import { useSession } from "next-auth/react";
 
 type CheckoutStep = 1 | 2 | 3;
 
@@ -29,7 +31,9 @@ export default function CheckoutDetails({
   const [selectedLocation, setSelectedLocation] =
     useState<DeliveryLocation | null>(null);
 
-  const [contactDetails, setContactDetails] = useState<ContactDetails>(initialContactDetails);
+  const [contactDetails, setContactDetails] = useState<ContactDetails>(
+    initialContactDetails,
+  );
 
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -54,6 +58,7 @@ export default function CheckoutDetails({
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const session = useSession();
   const handlePayment = async () => {
     setIsProcessing(true);
 
@@ -66,16 +71,27 @@ export default function CheckoutDetails({
     };
 
     localStorage.setItem("checkout_session", JSON.stringify(sessionData));
+    try {
+      const res = await checkout(
+        { deliveryLocationId: selectedLocation?.id ?? "" },
+        session.data?.token,
+      );
+      window.open(res.payment_link, "_blank");
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setIsProcessing(false);
+    }
 
-    setTimeout(() => {
-      const params = new URLSearchParams({
-        amount: subtotal.toString(),
-        sessionId: sessionData.sessionId,
-        callbackUrl: "/checkout/success", // Relative URL
-      });
+    // setTimeout(() => {
+    //   const params = new URLSearchParams({
+    //     amount: subtotal.toString(),
+    //     sessionId: sessionData.sessionId,
+    //     callbackUrl: "/checkout/success", // Relative URL
+    //   });
 
-      router.push(`/mock-gateway?${params.toString()}`);
-    }, 1500);
+    //   router.push(`/mock-gateway?${params.toString()}`);
+    // }, 1500);
   };
 
   return (

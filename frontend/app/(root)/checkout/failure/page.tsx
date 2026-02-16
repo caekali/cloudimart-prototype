@@ -7,7 +7,7 @@ import { AlertCircle, RotateCcw } from "lucide-react";
 
 function FailureContent() {
   const searchParams = useSearchParams();
-  const sessionId = searchParams.get("sessionId");
+  const tx_ref = searchParams.get("tx_ref");
 
 
   return (
