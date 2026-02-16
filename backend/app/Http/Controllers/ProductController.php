@@ -130,6 +130,7 @@ class ProductController extends BaseController
                         new OA\Property(property: 'name', description: "Product name", type: "string"),
                         new OA\Property(property: 'description', description: "Product description", type: "string"),
                         new OA\Property(property: 'price', description: "Product price", type: "float"),
+                        new OA\Property(property: 'stock_quantity', description: "Stock qauntity", type: "integer" ,minimum:1),
                         new OA\Property(property: 'image', description: "Product image",type: "string",format: "binary"),
                         new OA\Property(property: 'category_id', description: "Product category", type: "integer")
                         ]
@@ -143,33 +144,33 @@ class ProductController extends BaseController
         ]
     )]
    public function store(StoreProductRequest $request)
-{
-    $data = $request->validated();
+    {
+        $data = $request->validated();
 
-    // Generate unique slug from product name
-    $data['slug'] = $this->generateUniqueSlug($data['name']);
+        // Generate unique slug from product name
+        $data['slug'] = $this->generateUniqueSlug($data['name']);
 
-    if ($request->hasFile('image')) {
-        $path = $request->file('image')->store('products', 'public');
-        $data['image_url'] = $path;
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('products', 'public');
+            $data['image_url'] = $path;
+        }
+
+        Product::create($data);
+
+        return $this->successResponse(message: 'Product added');
     }
 
-    Product::create($data);
+    private function generateUniqueSlug(string $name): string
+    {
+        $slug = Str::slug($name);
+        $originalSlug = $slug;
+        $count = 1;
 
-    return $this->successResponse(message: 'Product added');
-}
+        while (Product::where('slug', $slug)->exists()) {
+            $slug = "{$originalSlug}-{$count}";
+            $count++;
+        }
 
-private function generateUniqueSlug(string $name): string
-{
-    $slug = Str::slug($name);
-    $originalSlug = $slug;
-    $count = 1;
-
-    while (Product::where('slug', $slug)->exists()) {
-        $slug = "{$originalSlug}-{$count}";
-        $count++;
+        return $slug;
     }
-
-    return $slug;
-}
 }

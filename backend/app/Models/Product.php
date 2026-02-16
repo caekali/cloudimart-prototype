@@ -17,6 +17,7 @@ class Product extends Model
         'description',
         'slug',
         'price',
+        'stock_quantity',
         'image_url',
         'category_id',
     ];
@@ -40,5 +41,9 @@ class Product extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+     public function orderItems() {
+        return $this->hasMany(OrderItem::class);
     }
 }
