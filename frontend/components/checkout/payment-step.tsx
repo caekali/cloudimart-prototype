@@ -82,7 +82,7 @@ export const PaymentStep: React.FC<PaymentStepProps> = ({
           ) : (
             <>
               <ShieldCheck className="w-5 h-5" />
-              Proceed to Payment
+              Place order and proceed to Payment
             </>
           )}
         </Button>
