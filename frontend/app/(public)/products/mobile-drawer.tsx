@@ -57,12 +57,12 @@ export default function MobileCategoryDrawer({
               </li>
 
               {categories.map((category) => {
-                const isActive = activeCategory === category.name;
+                const isActive = activeCategory === category.slug;
 
                 return (
-                  <li key={category.name}>
+                  <li key={category.id}>
                     <Link
-                      href={`/products?category=${category.name}`}
+                      href={`/products?category=${category.slug}`}
                       onClick={() => setOpen(false)}
                       className={clsx(
                         "block px-4 py-2 rounded-xl",

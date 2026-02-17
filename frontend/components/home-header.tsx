@@ -44,9 +44,9 @@ export function HomeHeader() {
           <div className="absolute left-0 w-48 bg-white border rounded-md shadow-lg z-10">
             <ul className="py-2">
               {categories.map((cat) => (
-                <li key={cat.name}>
+                <li key={cat.id}>
                   <Link
-                    href={`/products?category=${cat.name}`}
+                    href={`/products?category=${cat.slug}`}
                     className="block px-4 py-2 text-sm"
                   >
                     {cat.name}

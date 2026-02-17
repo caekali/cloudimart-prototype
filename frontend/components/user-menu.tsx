@@ -43,7 +43,7 @@ export default function UserMenu({ user }: { user: any }) {
         <div className="h-8 w-8 rounded-full bg-primary text-white flex items-center justify-center text-xs">
           {user.name?.charAt(0)}
         </div>
-        <span className="hidden md:block text-sm">{user.name}</span>
+        {/* <span className="hidden md:block text-sm">{user.name}</span> */}
       </button>
 
       {open && (
