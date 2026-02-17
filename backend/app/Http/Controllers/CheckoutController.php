@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Delivery;
 use App\Models\DeliveryLocation;
+use App\Models\User;
 use App\Services\PayChanguService;
 use App\Services\SmsService;
 use Illuminate\Http\Request;
@@ -78,11 +79,16 @@ class CheckoutController extends BaseController
                 ]);
             }
 
+            // randmoly assign a delivery person for demo purpose
+            $deliveryPerson = User::where('role', 'delivery_person')->inRandomOrder()->first();
+
+
             // delivery record
             Delivery::create([
                 'order_id' => $order->id,
                 'status' => 'pending',
                 'delivery_location_id' => $data["location_id"],
+                'delivery_person_id' => $deliveryPerson?->id
             ]);
 
             // clear cart
