@@ -155,9 +155,9 @@ class ProductController extends BaseController
             $data['image_url'] = $path;
         }
 
-        Product::create($data);
+        $product = Product::create($data);
 
-        return $this->successResponse(message: 'Product added');
+        return $this->successResponse(data:new ProductResource($product),message: 'Product added');
     }
 
     private function generateUniqueSlug(string $name): string
