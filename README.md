@@ -81,4 +81,4 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## API Documentation
 
-Visit `/api/documentation` (or your Swagger/OpenAPI URL) to explore endpoints, request parameters, and response schemas.
+Visit [http://localhost:8000/api/documentation](http://localhost:8000/api/documentation) (or your Swagger/OpenAPI URL) to explore endpoints, request parameters, and response schemas.
