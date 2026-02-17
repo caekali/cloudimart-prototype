@@ -23,40 +23,62 @@ class ProductController extends BaseController
         ]
     )]
     public function index(Request $request)
-    {
-        $products = Product::orderBy('id', 'desc')->cursorPaginate(5);
-        $resource = ProductResource::collection($products);
-        $response = $resource->response()->getData(true);
-        return $this->successResponse(data: $response['data'], message: 'Products retrieved.', meta: $response['meta']);
-    }
+{
+    $query = Product::query()->orderBy('id', 'desc');
 
-    #[OA\Get(
-        path: "/categories/{categoryId}/products",
-        summary: "Get products by category",
-        tags: ["Products"],
-        parameters: [
-            new OA\Parameter(
-                name: "categoryId",
-                description: "Id of the category",
-                in: "path",
-                required: true,
-                schema: new OA\Schema(type: "integer")),
-        ],
-        responses: [
-            new OA\Response(response: 200, description: "Products retrieved.")
-        ]
-    )]
-    public function getProductsByCategory(Request $request, $categoryId)
-    {
-        if ($categoryId) {
-            Category::findOrFail($categoryId);
+    if ($request->filled('category')) {
+
+        $category = Category::where('name', $request->category)->first();
+
+        if (! $category) {
+            return $this->errorResponse(
+                message: 'Category not found.',
+                status_code: 404
+            );
         }
 
-        $products = Product::where('category_id', $categoryId)->cursorPaginate(15);
-        $resource = ProductResource::collection($products);
-        $response = $resource->response()->getData(true);
-        return $this->successResponse(data: $response['data'], message: 'Products retrieved.', meta: $response['meta']);
+        $query->where('category_id', $category->id);
     }
+
+    $products = $query->cursorPaginate(15);
+
+    $resource = ProductResource::collection($products);
+    $response = $resource->response()->getData(true);
+
+    return $this->successResponse(
+        data: $response['data'],
+        message: 'Products retrieved.',
+        meta: $response['meta']
+    );
+}
+
+    // #[OA\Get(
+    //     path: "/categories/{categoryId}/products",
+    //     summary: "Get products by category",
+    //     tags: ["Products"],
+    //     parameters: [
+    //         new OA\Parameter(
+    //             name: "categoryId",
+    //             description: "Id of the category",
+    //             in: "path",
+    //             required: true,
+    //             schema: new OA\Schema(type: "integer")),
+    //     ],
+    //     responses: [
+    //         new OA\Response(response: 200, description: "Products retrieved.")
+    //     ]
+    // )]
+    // public function getProductsByCategory(Request $request, $categoryId)
+    // {
+    //     if ($categoryId) {
+    //         Category::findOrFail($categoryId);
+    //     }
+
+    //     $products = Product::where('category_id', $categoryId)->cursorPaginate(15);
+    //     $resource = ProductResource::collection($products);
+    //     $response = $resource->response()->getData(true);
+    //     return $this->successResponse(data: $response['data'], message: 'Products retrieved.', meta: $response['meta']);
+    // }
 
 
     public function search(Request $request)
