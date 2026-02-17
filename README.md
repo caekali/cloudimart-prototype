@@ -53,8 +53,7 @@ app/
 ├─ (admin)/         # Admin routes and layout
 ├─ (delivery)/      # Delivery staff routes and layout
 ├─ (public)/        # Customer/public routes
-├─ login/           # Shared login page
-└─ unauthorized/    # Access denied page
+├─ (auth)/           # auth pages
 ```
 
 ---
