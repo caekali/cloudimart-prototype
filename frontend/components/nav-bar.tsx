@@ -26,7 +26,7 @@ export function NavBar({ session }: { session: any }) {
             alt="Cloudimart"
             width={140}
             height={40}
-            priority
+            
           />
         </Link>
 

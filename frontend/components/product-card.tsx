@@ -27,7 +27,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   const handleAddToCart = async () => {
     if (!session) {
-      router.push(`/login?callbackUrl=${window.location.pathname}`);
+      router.push(`/signin?callbackUrl=${window.location.pathname}`);
       return;
     }
 
