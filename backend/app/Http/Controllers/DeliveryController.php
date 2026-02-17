@@ -7,6 +7,7 @@ use App\Http\Resources\DeliveryDetailResource;
 use App\Http\Resources\DeliveryResource;
 use App\Models\Delivery;
 use App\Models\Order;
+use App\Services\SmsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -59,7 +60,7 @@ class DeliveryController extends BaseController
 
         return $this->successResponse(new DeliveryDetailResource($delivery));
     }
-    public function confirmDelivery(ConfirmDeliveryRequest $request)
+    public function confirmDelivery(ConfirmDeliveryRequest $request,SmsService $smsService)
     {
         $data = $request->validated();
 
@@ -92,14 +93,9 @@ class DeliveryController extends BaseController
 
         $order->update(['status' => 'delivered']);
 
-        // notify user
-        Mail::raw(
-            "Hello {$order->user->name}, your order {$order->order_id} has been successfully delivered. Thank you for shopping with Cloudimart!",
-            function ($message) use ($order) {
-                $message->to($order->user->email)
-                        ->subject('Cloudimart Order Delivered');
-            }
-        );
+
+        $smsService->sendSMS($order->user->phone,"Cloudimart: Order {$order->order_id} delivered successfully. Thank you for shopping with us."
+                );
 
       return $this->successResponse(message:'Delivery confirmed');
     }

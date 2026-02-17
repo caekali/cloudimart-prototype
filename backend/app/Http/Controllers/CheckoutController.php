@@ -10,6 +10,7 @@ use App\Models\OrderItem;
 use App\Models\Delivery;
 use App\Models\DeliveryLocation;
 use App\Services\PayChanguService;
+use App\Services\SmsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
@@ -89,11 +90,8 @@ class CheckoutController extends BaseController
 
             DB::commit();
 
-            // Send email notification
-            Mail::raw("Your order {$order->order_id} has been placed successfully.", function ($message) use ($user) {
-                $message->to($user->email)
-                        ->subject('Order Confirmation - Cloudimart');
-            });
+           
+           
 
 
             // payment initiate
@@ -110,6 +108,8 @@ class CheckoutController extends BaseController
             $data = $response->json();
 
             $paymentLink = $data['data']['checkout_url'];
+
+            
 
             return $this->successResponse([
                 'order_id' => $order->id,
