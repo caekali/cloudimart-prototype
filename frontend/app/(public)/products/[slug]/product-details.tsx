@@ -13,7 +13,7 @@ export default async function ProductDetails({
 }: ProductDetailsProps) {
   const product = await productPromise;
   const session = await auth();
-  const isCustomerOrGuest = !session?.user || session?.role === "customer";
+  const isCustomerOrGuest = !session?.user || session?.user.role === "customer";
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden grid grid-cols-1 md:grid-cols-2">

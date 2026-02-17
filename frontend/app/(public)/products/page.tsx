@@ -2,9 +2,9 @@ import CategorySidebar from "./category-sidebar";
 import MobileCategoryDrawer from "./mobile-drawer";
 import { getProducts } from "@/api/products";
 import { getCategories } from "@/api/categories";
-import ProductGridClient from "../product-grid-client";
+import ProductGridClient from "../../../components/products-grid";
 import { Suspense } from "react";
-import ProductSkeletonGrid from "../products-skeleton-grid";
+import ProductSkeletonGrid from "../../../components/skeletons/products-grid-skeleton";
 
 export default async function ProductsPage({
   searchParams,

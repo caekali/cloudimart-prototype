@@ -1,7 +1,7 @@
 import { Suspense } from "react"
 import { HomeHeader } from "@/components/home-header"
-import ProductSkeletonGrid from "./products-skeleton-grid"
 import ProductsSection from "./products-section"
+import ProductsGridSkeleton from "../../components/skeletons/products-grid-skeleton"
 
 
 export default function HomePage() {
@@ -9,7 +9,7 @@ export default function HomePage() {
     <div className="space-y-8">
       <HomeHeader />
 
-      <Suspense fallback={<ProductSkeletonGrid />}>
+      <Suspense fallback={<ProductsGridSkeleton />}>
         <ProductsSection />
       </Suspense>
     </div>

@@ -13,7 +13,7 @@ export default function AddToCartButton({ product }: AddToCartButtonProps) {
   const { addItem } = useCart();
 
   return (
-    <Button className="flex items-center justify-center gap-2 w-full" onClick={() => addItem(product)}>
+    <Button className="flex items-center justify-center gap-2 w-full" onClick={() => addItem(product.id)}>
       <ShoppingCart size={24} /> Add to Cart
     </Button>
   );

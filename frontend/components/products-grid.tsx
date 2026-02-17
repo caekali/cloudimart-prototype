@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useTransition } from "react"
 import { getProducts } from "@/api/products"
 import { Product } from "@/types/product"
 import ProductCard from "@/components/product-card"
-import ProductSkeleton from "@/components/product-card-skeleton"
+import ProductSkeleton from "@/components/skeletons/product-card-skeleton"
 
 interface Props {
   initialProducts: Product[]
@@ -12,7 +12,7 @@ interface Props {
   category?: string
 }
 
-export default function ProductGridClient({
+export default function ProductsGrid({
   initialProducts,
   initialCursor,
   category,

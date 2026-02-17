@@ -1,11 +1,11 @@
 import { getProducts } from "@/api/products"
-import ProductGridClient from "./product-grid-client"
+import ProductsGrid from "../../components/products-grid"
 
 export default async function ProductsSection() {
   const initial = await getProducts()
 
   return (
-    <ProductGridClient
+    <ProductsGrid
       initialProducts={initial.products}
       initialCursor={initial.nextCursor}
     />

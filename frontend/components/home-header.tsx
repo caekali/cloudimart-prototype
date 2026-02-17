@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getCategories } from "@/api/categories";
 import { Category } from "@/types/category";
+import { Menu } from "lucide-react";
 
 export function HomeHeader() {
   const searchParams = useSearchParams();
@@ -34,8 +35,9 @@ export function HomeHeader() {
         onMouseEnter={() => setShowDropdown(true)}
         onMouseLeave={() => setShowDropdown(false)}
       >
-        <button className="px-4 py-2 text-sm transition">
-          All Categories
+        <button className="px-4 py-2 text-sm transition flex items-center gap-2">
+          <Menu size={16}/>
+          Categories
         </button>
 
         {showDropdown && (
