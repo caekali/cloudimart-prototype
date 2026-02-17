@@ -28,7 +28,7 @@ class OrderController extends BaseController
     )]
     public function show(Request $request,$orderId)
     {
-        $order = Order::with(['items.product'])
+        $order = Order::with(['items.product','delivery.location'])
             ->where('order_id', $orderId)
             ->first();
 
@@ -43,7 +43,7 @@ class OrderController extends BaseController
             'status' => $order->status,
             'payment_status' => $order->payment_status,
             'total_amount' => $order->total_amount,
-            'delivery_location' => $order->delivery_location,
+            'delivery_location' => $order->delivery->location->name,
             'contact' => [
                 "phone" => $order->user->phone,
                 "email" => $order->user->email

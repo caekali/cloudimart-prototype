@@ -8,8 +8,9 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\DeliveryLocationController;
 use App\Http\Controllers\Customer\OrderController as CustomerOrderController;
-
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\SMSController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -51,6 +52,8 @@ Route::middleware('auth:sanctum')->prefix('cart')->group(function () {
 });
 
 Route::post('/checkout', [CheckoutController::class, 'checkout'])->middleware('auth:sanctum');
+Route::get('/orders/{orderId}', [OrderController::class, 'show'])->middleware('auth:sanctum');
+
 Route::middleware(['auth:sanctum','delivery'])->post('/delivery/confirm', [DeliveryController::class, 'confirmDelivery']);
 
 Route::middleware('auth:sanctum')
@@ -67,3 +70,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/deliveries/confirm', [DeliveryController::class, 'confirmDelivery']);
     Route::get('/deliveries/{id}', [DeliveryController::class, 'show']);
 });
+
+Route::post('/send-sms', [SMSController::class, 'send']);

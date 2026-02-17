@@ -18,6 +18,6 @@ class Delivery extends Model
 
      public function location()
     {
-        return $this->belongsTo(DeliveryLocation::class);
+        return $this->belongsTo(DeliveryLocation::class,'delivery_location_id', 'id');
     }
 }
