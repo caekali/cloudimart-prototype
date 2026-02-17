@@ -1,12 +1,9 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import AdminNavbar from "./admin-navbar";
+import AdminSidebar from "./admin-sidebar";
+import AdminTopbar from "./admin-navbar";
 
-export default async function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
 
   if (!session || session?.user?.role !== "admin") {
@@ -14,9 +11,13 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <AdminNavbar />
-      <main className="p-6 flex-1">{children}</main>
+    <div className="flex min-h-screen bg-gray-50">
+      <AdminSidebar />
+
+      <div className="flex-1 flex flex-col md:ml-64">
+
+        <main className="flex-1 p-6">{children}</main>
+      </div>
     </div>
   );
 }
