@@ -37,7 +37,7 @@ class PaymentController{
 
                 $smsService->sendSMS($order->user->phone,"Cloudimart: Order Confirmed.
                     Order ID: {$order->order_id}
-                    Amount: {$order->total_amount}
+                    Amount: MWK{$order->total_amount}
                     Delivery: {$order->delivery->location->name}
 
                     Keep this ID for delivery verification.
