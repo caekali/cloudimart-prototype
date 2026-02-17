@@ -31,6 +31,10 @@ export const authConfig = {
       }
 
       if (isAuthRoute && isLoggedIn) {
+        const role = auth?.user?.role;
+
+        if (role === "admin") return Response.redirect(new URL('/admin', nextUrl));
+        if (role === "delivery_person") return Response.redirect(new URL('/delivery/deliveries', nextUrl));
         return Response.redirect(new URL("/", nextUrl));
       }
 
