@@ -9,11 +9,13 @@ import ProductSkeleton from "@/components/product-card-skeleton"
 interface Props {
   initialProducts: Product[]
   initialCursor: string | null
+  category?: string
 }
 
 export default function ProductGridClient({
   initialProducts,
   initialCursor,
+  category,
 }: Props) {
   const [products, setProducts] = useState(initialProducts)
   const [nextCursor, setNextCursor] = useState<string | null>(initialCursor)
@@ -21,11 +23,16 @@ export default function ProductGridClient({
   const [isPending, startTransition] = useTransition()
   const observerRef = useRef<HTMLDivElement | null>(null)
 
+  useEffect(() => {
+    setProducts(initialProducts)
+    setNextCursor(initialCursor)
+  }, [initialProducts, initialCursor])
+
   const loadMore = () => {
     if (!nextCursor || isPending) return
 
     startTransition(async () => {
-      const res = await getProducts(nextCursor)
+      const res = await getProducts(category, nextCursor)
 
       setProducts((prev) => {
         const ids = new Set(prev.map((p) => p.id))
@@ -55,7 +62,6 @@ export default function ProductGridClient({
           <ProductCard key={product.id} product={product} />
         ))}
 
-        {/* Skeletons during transition */}
         {isPending &&
           Array.from({ length: 4 }).map((_, i) => (
             <ProductSkeleton key={`skeleton-${i}`} />

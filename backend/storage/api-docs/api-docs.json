@@ -360,13 +360,70 @@
                 }
             }
         },
+        "/me/orders": {
+            "get": {
+                "tags": [
+                    "Customer Orders"
+                ],
+                "summary": "Get authenticated user's orders",
+                "operationId": "5328c64c6822920dc55653d19d92eb70",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/me/orders/{id}": {
+            "get": {
+                "tags": [
+                    "Customer Orders"
+                ],
+                "summary": "Get a single order belonging to customer",
+                "operationId": "2509cc89be86e1f43914c082473a64a6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Order not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/confirm-delivery": {
             "post": {
                 "tags": [
                     "Deliveries"
                 ],
                 "summary": "Confirm Delivery",
-                "operationId": "2f5d91e7c05a827a0c7a51d52045b019",
+                "operationId": "0f77698d8b66fabf57dfa44c768d8453",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -539,31 +596,6 @@
                 }
             }
         },
-        "/categories/{categoryId}/products": {
-            "get": {
-                "tags": [
-                    "Products"
-                ],
-                "summary": "Get products by category",
-                "operationId": "4b267b0def568f354a189242b9a19b0a",
-                "parameters": [
-                    {
-                        "name": "categoryId",
-                        "in": "path",
-                        "description": "Id of the category",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Products retrieved."
-                    }
-                }
-            }
-        },
         "/products/{productId}": {
             "get": {
                 "tags": [
@@ -651,6 +683,10 @@
         {
             "name": "Checkout",
             "description": "Checkout"
+        },
+        {
+            "name": "Customer Orders",
+            "description": "Customer Orders"
         },
         {
             "name": "Deliveries",

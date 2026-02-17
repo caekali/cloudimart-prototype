@@ -5,23 +5,28 @@ import { ApiError } from "@/types/api_response";
 
 
 export async function getProducts(
+  category?: string,
   cursor?: string
 ): Promise<{ products: Product[]; nextCursor: string | null }> {
 
-  const url = new URL(`${BASE_URL}/products`)
+  const url = new URL(`${BASE_URL}/products`);
+
+  if (category) {
+    url.searchParams.set("category", category);
+  }
 
   if (cursor) {
-    url.searchParams.set("cursor", cursor)
+    url.searchParams.set("cursor", cursor);
   }
 
   const res = await apiFetch<Product[]>(url.toString(), {
     cache: "no-store",
-  })
+  });
 
   return {
     products: res.data ?? [],
     nextCursor: res.meta?.next_cursor ?? null,
-  }
+  };
 }
 
 

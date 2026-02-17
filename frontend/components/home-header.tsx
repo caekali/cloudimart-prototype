@@ -44,7 +44,7 @@ export function HomeHeader() {
               {categories.map((cat) => (
                 <li key={cat.name}>
                   <Link
-                    href={`/?category=${cat.name}`}
+                    href={`/products?category=${cat.name}`}
                     className="block px-4 py-2 text-sm"
                   >
                     {cat.name}
