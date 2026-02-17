@@ -12,8 +12,8 @@ class PayChanguService
             'tx_ref' => $reference,
             'amount' => $amount,
             'currency' => $currency,
-            'callback_url' => 'https://b161-102-70-107-41.ngrok-free.app/checkout/success',
-            'return_url' => 'https://b161-102-70-107-41.ngrok-free.app/checkout/error',
+            'callback_url' => 'https://2e4e-102-70-105-73.ngrok-free.app/checkout/success',
+            'return_url' => 'https://2e4e-102-70-105-73.ngrok-free.app/checkout/error',
             'customer' => [
                 'email' => $customer->email,
                 'name' => $customer->name,
