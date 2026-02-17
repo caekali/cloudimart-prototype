@@ -83,15 +83,7 @@ export default function CheckoutDetails({
       setIsProcessing(false);
     }
 
-    // setTimeout(() => {
-    //   const params = new URLSearchParams({
-    //     amount: subtotal.toString(),
-    //     sessionId: sessionData.sessionId,
-    //     callbackUrl: "/checkout/success", // Relative URL
-    //   });
 
-    //   router.push(`/mock-gateway?${params.toString()}`);
-    // }, 1500);
   };
 
   return (

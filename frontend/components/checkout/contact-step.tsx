@@ -29,8 +29,8 @@ export const ContactStep: React.FC<ContactStepProps> = ({
     const newErrors: Partial<ContactDetails> = {};
     if (!data.name.trim()) newErrors.name = "Name is required";
     if (!data.phone.trim()) newErrors.phone = "Phone number is required";
-    else if (!/^\d{10}$/.test(data.phone.replace(/\s/g, "")))
-      newErrors.phone = "Enter a valid 10-digit phone number";
+    else if (!/^\+?\d{10,15}$/.test(data.phone.replace(/\s/g, "")))
+  newErrors.phone = "Enter a valid phone number with optional country code";
     if (!data.email.trim()) newErrors.email = "email is required";
     return newErrors;
   };
