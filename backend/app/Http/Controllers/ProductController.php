@@ -28,7 +28,7 @@ class ProductController extends BaseController
 
     if ($request->filled('category')) {
 
-        $category = Category::where('name', $request->category)->first();
+        $category = Category::where('slug', $request->category)->first();
 
         if (! $category) {
             return $this->errorResponse(
