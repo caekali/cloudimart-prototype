@@ -143,7 +143,7 @@ export default function RegisterPage() {
 
       <div className="mt-6 text-center">
         <Link
-          href="/login"
+          href="/signin"
           className="text-sm font-medium text-orange-600 hover:text-orange-500"
         >
           Already have an account? Login

@@ -2,6 +2,8 @@
 
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
+import { getSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { z } from "zod";
 
 // export async function authenticate(
@@ -52,22 +54,40 @@ export async function authenticateAction(prevState_: any | undefined, formData: 
     return { success: false, error: errors };
   }
 
+  const router = useRouter();
+
   try {
-    await signIn("credentials",formData);
-    // return { success: true, message: "User logged in successfully" };
-  } catch (error) {
-    console.log(error);
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case "CredentialsSignin":
-          return {
-            success: false,
-            message: "Bad credentials",
-          };
+    const res = await signIn("credentials", {
+      ...formData,
+      redirect: false, // prevent NextAuth default redirect
+    });
+
+    if (res?.error) {
+      if (res.error === "CredentialsSignin") {
+        return { success: false, message: "Bad credentials" };
+      }
+      return { success: false, message: "Something went wrong" };
+    }
+
+    // fetch session to get user info
+    const session = await getSession();
+
+    if (session?.user?.role) {
+      switch (session.user.role) {
+        case "admin":
+          router.replace("/admin/dashboard");
+          break;
+        case "delivery":
+          router.replace("/delivery/dashboard");
+          break;
         default:
-          return { success: false, message: "Something went wrong" };
+          router.replace("/"); // fallback
       }
     }
+
+    return { success: true, message: "User logged in successfully" };
+  } catch (error: any) {
+    console.log(error);
     return { success: false, message: "Something went wrong" };
   }
 }

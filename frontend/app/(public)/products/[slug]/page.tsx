@@ -3,7 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { Suspense } from "react";
 import ProductDetails from "./product-details";
 import { getProductBySlug } from "@/api/products";
-import LoadingSkeleton from "@/app/(root)/products/[slug]/loading-skeleton";
+import LoadingSkeleton from "@/app/(public)/products/[slug]/loading-skeleton";
 
 export default async function ProductDetailsPage({
   params,

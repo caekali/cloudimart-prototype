@@ -16,8 +16,14 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
   const { addItem } = useCart();
   const { data: session } = useSession();
+  const user = session?.user;
+
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+
+  const isCustomerOrGuest = !user || user.role === "customer";
+  // const isAdmin = user?.role === "admin";
+  // const isDelivery = user?.role === "delivery";
 
   const handleAddToCart = async () => {
     if (!session) {
@@ -73,20 +79,33 @@ export default function ProductCard({ product }: ProductCardProps) {
             </span>
           </div>
 
-          <Button
-            className="w-full flex items-center justify-center gap-2"
-            onClick={handleAddToCart}
-            disabled={loading}
-          >
-            {loading ? (
-              <span className="text-sm">Adding...</span>
-            ) : (
-              <>
-                <ShoppingCart className="w-4 h-4" />
-                <span className="text-sm">Add to Cart</span>
-              </>
-            )}
-          </Button>
+          {isCustomerOrGuest && (
+            <Button
+              className="w-full flex items-center justify-center gap-2"
+              onClick={handleAddToCart}
+              disabled={loading}
+            >
+              {loading ? (
+                <span className="text-sm">Adding...</span>
+              ) : (
+                <>
+                  <ShoppingCart className="w-4 h-4" />
+                  <span className="text-sm">Add to Cart</span>
+                </>
+              )}
+            </Button>
+          )}
+
+          {/* {isAdmin && (
+            <div className="mt-2 flex gap-2">
+              <button className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600">
+                Edit
+              </button>
+              <button className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600">
+                Delete
+              </button>
+            </div>
+          )} */}
         </div>
       </div>
     </div>
