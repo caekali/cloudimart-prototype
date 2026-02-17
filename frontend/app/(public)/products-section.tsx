@@ -1,5 +1,5 @@
 import { getProducts } from "@/api/products"
-import ProductsGrid from "../../components/products-grid"
+import ProductsGrid from "./product-grid-client"
 
 export default async function ProductsSection() {
   const initial = await getProducts()

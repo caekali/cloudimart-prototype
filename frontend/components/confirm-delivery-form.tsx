@@ -5,6 +5,7 @@ import Button from "@/components/ui/button";
 import FormField from "./ui/form-field";
 import { confirmDelivery } from "@/api/delivery";
 import { useSession } from "next-auth/react";
+import { toast } from "react-toastify";
 
 interface ConfirmDeliveryProps {
   onComplete?: () => void;
@@ -32,13 +33,19 @@ export default function ConfirmDeliveryForm({
         session?.token,
       );
 
+      toast.success("Delivery Confirmed!");
+
       setIsOpen(false);
       setOrderId("");
       setCollectorPhone("");
 
       if (onComplete) onComplete();
     } catch (err: any) {
-      setError(err.message);
+      if (err.errors) {
+        setError(err.message);
+      } else {
+        toast.error(err.message);
+      }
     } finally {
       setLoading(false);
     }

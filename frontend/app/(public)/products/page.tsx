@@ -2,9 +2,9 @@ import CategorySidebar from "./category-sidebar";
 import MobileCategoryDrawer from "./mobile-drawer";
 import { getProducts } from "@/api/products";
 import { getCategories } from "@/api/categories";
-import ProductGridClient from "../../../components/products-grid";
+import ProductGridClient from "../product-grid-client";
 import { Suspense } from "react";
-import ProductSkeletonGrid from "../../../components/skeletons/products-grid-skeleton";
+import ProductSkeletonGrid from "../products-grid-skeleton";
 
 export default async function ProductsPage({
   searchParams,
@@ -33,11 +33,15 @@ export default async function ProductsPage({
         </div>
 
         <Suspense fallback={<ProductSkeletonGrid />}>
-          <ProductGridClient
-            initialProducts={products.products}
-            initialCursor={products.nextCursor}
-            category={category}
-          />
+          {products.products.length > 0 ? (
+            <ProductGridClient
+              initialProducts={products.products}
+              initialCursor={products.nextCursor}
+              category={category}
+            />
+          ) : (
+            <div>No Products found</div>
+          )}
         </Suspense>
       </main>
     </div>

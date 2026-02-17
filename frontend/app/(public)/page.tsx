@@ -1,7 +1,7 @@
 import { Suspense } from "react"
 import { HomeHeader } from "@/components/home-header"
 import ProductsSection from "./products-section"
-import ProductsGridSkeleton from "../../components/skeletons/products-grid-skeleton"
+import ProductsGridSkeleton from "./products-grid-skeleton"
 
 
 export default function HomePage() {
