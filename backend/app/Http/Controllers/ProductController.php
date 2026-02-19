@@ -82,19 +82,29 @@ class ProductController extends BaseController
 
 
     public function search(Request $request)
-
-    
     {
-                    
+        $category = null;
+         if ($request->filled('category')) {
 
+        $category = Category::where('slug', $request->category)->first();
+
+        if (! $category) {
+            return $this->errorResponse(
+                message: 'Category not found.',
+                status_code: 404
+            );
+        }
+        
+        }
         $query = $request->validate([
                     'q' => 'required|string|min:1',
                 ])['q'];
 
                 $products = Product::search($query)
-            // ->query(function ($builder) use ($request) {
-            //     $builder->where('category_id', $request->category_id ?? 0);
-            // })
+            ->query(function ($builder) use ($category) {
+                if($category)
+                $builder->where('category_id', $category->id);
+            })
             ->paginate(15);
 
         return $this->successResponse(ProductResource::collection($products));
