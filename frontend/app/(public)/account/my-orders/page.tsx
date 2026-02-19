@@ -7,7 +7,7 @@ export default async function MyOrders() {
   const session = await auth();
 
   if (!session?.user?.id) {
-    redirect("/login");
+    redirect("/signin");
   }
 
   const orders = await getUserOrders(session?.token);
