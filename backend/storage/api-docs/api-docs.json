@@ -12,13 +12,13 @@
         }
     ],
     "paths": {
-        "/cart": {
+        "me/cart": {
             "get": {
                 "tags": [
                     "Cart"
                 ],
                 "summary": "Get user cart",
-                "operationId": "294e093bf29c111c01d8402121fb4f43",
+                "operationId": "73deb3818d0eff34e30464367b2ee5ce",
                 "responses": {
                     "200": {
                         "description": "Cart retrieved successfully."
@@ -26,13 +26,13 @@
                 }
             }
         },
-        "/cart/items": {
+        "me/cart/items": {
             "post": {
                 "tags": [
                     "Cart"
                 ],
                 "summary": "Add item to cart",
-                "operationId": "83c1c44d6a909613d13a701708e78786",
+                "operationId": "d4e6842a418abf8c4c5b0233bed37d7e",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -74,13 +74,13 @@
                 }
             }
         },
-        "/cart/items/{itemId}": {
+        "me/cart/items/{itemId}": {
             "delete": {
                 "tags": [
                     "Cart"
                 ],
                 "summary": "Remove item from cart",
-                "operationId": "2fad51ff609666f2e7400bf8402893c0",
+                "operationId": "6788304806d86f143b2e93e42bd0a7bb",
                 "parameters": [
                     {
                         "name": "itemId",
@@ -106,7 +106,7 @@
                     "Cart"
                 ],
                 "summary": "Update cart item quantity",
-                "operationId": "8fbfd932324cb7decf36c5498455fb00",
+                "operationId": "f7d991cb24c81f9a583f5cdcb0acb464",
                 "parameters": [
                     {
                         "name": "itemId",
@@ -148,13 +148,13 @@
                 }
             }
         },
-        "/cart/clear": {
+        "me/cart/clear": {
             "delete": {
                 "tags": [
                     "Cart"
                 ],
                 "summary": "Remove all items from cart",
-                "operationId": "6c16eeec461bf91618968113b533465a",
+                "operationId": "0b06cfdbe31287d3b793959098153c69",
                 "responses": {
                     "200": {
                         "description": "Cart cleared."
@@ -592,6 +592,31 @@
                     },
                     "500": {
                         "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/products/search": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Search for a product",
+                "operationId": "cb3d19d3bdb960a76a8948819ab5fe55",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Keyword seach query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Products retrieved."
                     }
                 }
             }

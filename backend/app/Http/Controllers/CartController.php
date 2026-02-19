@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 class CartController extends BaseController
 {
     #[OA\Get(
-        path: "/cart",
+        path: "me/cart",
         summary: "Get user cart",
         tags: ["Cart"],
         responses: [
@@ -41,7 +41,7 @@ class CartController extends BaseController
 
     
     #[OA\Post(
-        path: "/cart/items",
+        path: "me/cart/items",
         summary: "Add item to cart",
         requestBody: new OA\RequestBody(required: true,
             content: new OA\MediaType( mediaType:"application/json",
@@ -96,7 +96,7 @@ class CartController extends BaseController
 
 
      #[OA\Patch(
-        path: "/cart/items/{itemId}",
+        path: "me/cart/items/{itemId}",
         summary: "Update cart item quantity",
         requestBody: new OA\RequestBody(required: true,
             content: new OA\MediaType(
@@ -154,7 +154,7 @@ class CartController extends BaseController
 
 
      #[OA\Delete(
-        path: "/cart/items/{itemId}",
+        path: "me/cart/items/{itemId}",
         summary: "Remove item from cart",
         tags: ["Cart"],
         parameters: [
@@ -200,7 +200,7 @@ class CartController extends BaseController
 
 
  #[OA\Delete(
-        path: "/cart/clear",
+        path: "me/cart/clear",
         summary: "Remove all items from cart",
         tags: ["Cart"],
         responses: [

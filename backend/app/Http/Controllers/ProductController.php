@@ -81,6 +81,22 @@ class ProductController extends BaseController
     // }
 
 
+     #[OA\Get(
+        path: "/products/search",
+        summary: "Search for a product",
+        tags: ["Products"],
+        parameters: [
+            new OA\Parameter(
+                name: "q",
+                description: "Keyword seach query",
+                in: "query",
+                required: true,
+                schema: new OA\Schema(type: "string")),
+        ],
+        responses: [
+            new OA\Response(response: 200, description: "Products retrieved.")
+        ]
+    )]
     public function search(Request $request)
     {
         $category = null;
