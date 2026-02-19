@@ -50,3 +50,35 @@ export async function getProductBySlug(slug: string): Promise<Product> {
 
 
 
+export async function searchProduct(
+  query?: string,
+  category?: string,
+  cursor?: string
+): Promise<{ products: Product[]; nextCursor: string | null }> {
+
+  const url = new URL(`${BASE_URL}/products/search`);
+
+  if (category) {
+    url.searchParams.set("category", category);
+  }
+
+  if (query) {
+    url.searchParams.set("q", query);
+
+  }
+
+  if (cursor) {
+    url.searchParams.set("cursor", cursor);
+  }
+
+  const res = await apiFetch<Product[]>(url.toString(), {
+    cache: "no-store",
+  });
+
+  return {
+    products: res.data ?? [],
+    nextCursor: res.meta?.next_cursor ?? null,
+  };
+}
+
+

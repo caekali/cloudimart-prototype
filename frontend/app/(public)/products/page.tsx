@@ -1,6 +1,6 @@
 import CategorySidebar from "./category-sidebar";
 import MobileCategoryDrawer from "./mobile-drawer";
-import { getProducts } from "@/api/products";
+import { getProducts, searchProduct } from "@/api/products";
 import { getCategories } from "@/api/categories";
 import ProductGridClient from "../product-grid-client";
 import { Suspense } from "react";
@@ -9,13 +9,13 @@ import ProductSkeletonGrid from "../products-grid-skeleton";
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ category?: string }>;
+  searchParams: Promise<{ category?: string; q?: string }>;
 }) {
-  const { category } = await searchParams;
+  const { category, q } = await searchParams;
 
   const [categories, products] = await Promise.all([
     getCategories(),
-    getProducts(category),
+    q ? searchProduct(q, category) : getProducts(category),
   ]);
 
   return (

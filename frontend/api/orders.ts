@@ -25,7 +25,7 @@ export async function checkout(payload: CheckoutPayload, token: string): Promise
   }
 
   const res = await apiFetch<OrderResponse>(
-    `${BASE_URL}/checkout`,
+    `${BASE_URL}/me/checkout`,
     {
       method: "POST",
       body: JSON.stringify({

@@ -5,7 +5,7 @@ import { ApiError } from "@/types/api_response";
 
 export const cartService = {
   async getCart(token: string): Promise<CartState> {
-    const res = await apiFetch<CartState>(`${BASE_URL}/cart`, {}, token);
+    const res = await apiFetch<CartState>(`${BASE_URL}/me/cart`, {}, token);
 
     if (!res.data) {
       throw new ApiError("Cart data missing", 500);
@@ -16,7 +16,7 @@ export const cartService = {
 
   async addItem(productId: string, token: string): Promise<CartState> {
     const res = await apiFetch<CartState>(
-      `${BASE_URL}/cart/items`,
+      `${BASE_URL}/me/cart/items`,
       {
         method: "POST",
         body: JSON.stringify({
@@ -41,7 +41,7 @@ export const cartService = {
   ): Promise<CartState> {
 
     const res = await apiFetch<CartState>(
-      `${BASE_URL}/cart/items/${itemId}`,
+      `${BASE_URL}/me/cart/items/${itemId}`,
       {
         method: "PATCH",
         body: JSON.stringify({ quantity }),
@@ -58,7 +58,7 @@ export const cartService = {
 
   async removeItem(itemId: string, token: string): Promise<CartState> {
     const res = await apiFetch<CartState>(
-      `${BASE_URL}/cart/items/${itemId}`,
+      `${BASE_URL}/me/cart/items/${itemId}`,
       { method: "DELETE" },
       token
     );

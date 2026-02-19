@@ -10,7 +10,7 @@ export async function getContactDetails(): Promise<ContactDetails> {
     const session = await auth();
     const apiToken = session?.token;
 
-    const res = await apiFetch<ContactDetails>(`${BASE_URL}/profile`, {
+    const res = await apiFetch<ContactDetails>(`${BASE_URL}/me/profile`, {
         cache: "no-store",
     },
         apiToken
