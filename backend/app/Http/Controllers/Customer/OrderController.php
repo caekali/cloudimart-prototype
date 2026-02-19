@@ -24,7 +24,7 @@ class OrderController extends BaseController
     {
         $orders = $request->user()
             ->orders()
-            ->with(['items.product']) 
+            ->with(['items.product','delivery.location']) 
             ->latest()
             ->paginate(10);
 
