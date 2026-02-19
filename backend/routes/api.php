@@ -69,5 +69,3 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/deliveries/confirm', [DeliveryController::class, 'confirmDelivery']);
     Route::get('/deliveries/{id}', [DeliveryController::class, 'show']);
 });
-
-Route::post('/send-sms', [SMSController::class, 'send']);
