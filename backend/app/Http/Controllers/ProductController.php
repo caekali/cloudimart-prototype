@@ -82,17 +82,22 @@ class ProductController extends BaseController
 
 
     public function search(Request $request)
-    {
-        $query = $request->query('q');
-// $products = Product::search($query)
-//     ->query(function ($builder) use ($request) {
-//         $builder->where('category_id', $request->category_id ?? 0);
-//     })
-//     ->paginate(20);
-        // Simple search
-        $products = Product::search($query)->get();
 
-        return response()->json($products);
+    
+    {
+                    
+
+        $query = $request->validate([
+                    'q' => 'required|string|min:1',
+                ])['q'];
+
+                $products = Product::search($query)
+            // ->query(function ($builder) use ($request) {
+            //     $builder->where('category_id', $request->category_id ?? 0);
+            // })
+            ->paginate(15);
+
+        return $this->successResponse(ProductResource::collection($products));
     }
 
 

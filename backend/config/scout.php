@@ -210,7 +210,12 @@ return [
     'tntsearch' => [
     'storage'  => storage_path('tntsearch'), // folder to store indexes
     'fuzziness' => env('TNTSEARCH_FUZZINESS', true), // allow typos
-    'asYouType' => false, // search as you type
+     'fuzzy' => [
+        'prefix_length' => 2,
+        'max_expansions' => 50,
+        'distance' => 2,
+    ],
+    'asYouType' => true, // search as you type
     'searchBoolean' => env('TNTSEARCH_BOOLEAN', false), // boolean search
 ],
 

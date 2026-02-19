@@ -11,6 +11,8 @@ class Product extends Model
 {
 
      use Searchable;
+         public $asYouType = true;
+
 
     protected $fillable = [
         'name',
