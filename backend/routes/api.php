@@ -36,7 +36,7 @@ Route::prefix('auth')->group(function () {
 });
 
 
- Route::middleware(['auth:sanctum', 'admin'])
+ Route::middleware([])
         ->prefix('admin')
         ->group(function () {
 
