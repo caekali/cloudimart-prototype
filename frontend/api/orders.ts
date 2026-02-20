@@ -52,7 +52,7 @@ export async function getOrder(orderId: string, token: string): Promise<Order> {
 
 
   const res = await apiFetch<Order>(
-    `${BASE_URL}/orders/${orderId}`,
+    `${BASE_URL}/me/orders/${orderId}`,
     {
       cache: "no-store",
     }

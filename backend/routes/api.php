@@ -37,7 +37,7 @@ Route::prefix('auth')->group(function () {
 
 
  Route::middleware([])
-        ->prefix('admin')
+        // ->prefix('admin')
         ->group(function () {
 
             Route::post('/categories', [\App\Http\Controllers\CategoryController::class, 'store']);
